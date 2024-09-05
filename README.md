@@ -6,7 +6,7 @@ Fragments back-end API
 
 To run the server, use the command `npm run start`.
 
-```json
+```jsonc
 // package.json
 
 "scripts": {
@@ -20,7 +20,7 @@ To run the server, use the command `npm run start`.
 
 To run the server in dev mode and restart it when changes are made to the code, use the command `npm run dev`.
 
-```json
+```jsonc
 // package.json
 
 "scripts": {
@@ -32,9 +32,9 @@ To run the server in dev mode and restart it when changes are made to the code, 
 
 ### Using a debugger
 
-To attach a debugger (e.g. VSCode), configure it using  the `npm run debug` script.
+To attach a debugger (e.g. [VSCode](https://code.visualstudio.com/docs/editor/debugging)), configure it using  the `npm run debug` script. (Refer to debugger documentation)
 
-```json
+```jsonc
 // package.json
 
 "scripts": {
@@ -44,7 +44,7 @@ To attach a debugger (e.g. VSCode), configure it using  the `npm run debug` scri
 }
 ```
 
-```json
+```jsonc
 // .vscode/launch.json
 
 {
@@ -69,7 +69,7 @@ To attach a debugger (e.g. VSCode), configure it using  the `npm run debug` scri
 
 To lint the code using [ESLint](https://eslint.org/), use the command `npm run lint`.
 
-```json
+```jsonc
 // package.json
 
 "scripts": {
