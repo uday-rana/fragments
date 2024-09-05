@@ -30,6 +30,8 @@ To run the server in dev mode and restart it when changes are made to the code, 
 }
 ```
 
+### Using a debugger
+
 To attach a debugger (e.g. VSCode), configure it using  the `npm run debug` script.
 
 ```json
