@@ -10,7 +10,8 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run-script", "debug"],
       "skipFiles": ["<node_internals>/**"],
-      "type": "node"
+      "type": "node",
+      "outputCapture": "std"
     }
   ]
 }
