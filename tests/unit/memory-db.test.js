@@ -10,7 +10,7 @@ describe('memory-db', () => {
 
   test('put() returns nothing', async () => {
     const result = await db.put('a', 'b', {});
-    expect(result).toBe(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('get() returns what we put() into the db', async () => {
@@ -30,7 +30,7 @@ describe('memory-db', () => {
   test('get() with incorrect secondaryKey returns nothing', async () => {
     await db.put('a', 'b', 123);
     const result = await db.get('a', 'c');
-    expect(result).toBe(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('query() returns all secondaryKey values', async () => {
@@ -57,7 +57,7 @@ describe('memory-db', () => {
     await db.put('a', 'a', { value: 1 });
     expect(await db.get('a', 'a')).toEqual({ value: 1 });
     await db.del('a', 'a');
-    expect(await db.get('a', 'a')).toBe(undefined);
+    expect(await db.get('a', 'a')).toBeUndefined();
   });
 
   test('del() throws if primaryKey and secondaryKey not in db', () => {
