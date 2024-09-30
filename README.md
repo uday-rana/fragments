@@ -18,7 +18,7 @@ To run the server, use the command `npm run start`.
 
 ### Dev mode
 
-To run the server in dev mode and restart it when changes are made to the code, use the command `npm run dev`.
+To run the server in dev mode and automatically restart it when changes are made to the source code, use the command `npm run dev`.
 
 ```jsonc
 // package.json
