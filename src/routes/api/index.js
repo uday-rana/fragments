@@ -21,7 +21,7 @@ const rawBody = () =>
         const { type } = contentType.parse(req);
         return Fragment.isSupportedType(type);
       } catch (error) {
-        logger.warn({ error }, 'unsupported content type');
+        logger.warn({ error }, 'Received request with unsupported content type');
         return false;
       }
     },
