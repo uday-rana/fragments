@@ -26,11 +26,11 @@ describe('POST /v1/fragments', () => {
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
       // TODO: update this test with src/hash.js once implemented
-      expect(res.body.fragment.ownerId).toEqual(ownerEmail);
+      expect(res.body.fragment.ownerId).toStrictEqual(ownerEmail);
       expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(rawData));
       expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
       expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
-      expect(res.headers.location).toEqual(expectedLocationURL);
+      expect(res.headers.location).toStrictEqual(expectedLocationURL);
     });
   });
 

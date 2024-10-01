@@ -195,7 +195,7 @@ describe('fragment memory-db functions', () => {
       await writeFragment(fragment1);
       await writeFragment(fragment2);
       const result = await readFragment('a', 'f');
-      expect(result).not.toEqual(fragment1);
+      expect(result).not.toStrictEqual(fragment1);
       expect(result).toStrictEqual(fragment2);
     });
 
@@ -205,7 +205,7 @@ describe('fragment memory-db functions', () => {
       await writeFragmentData('a', 'f', fragmentData1);
       await writeFragmentData('a', 'f', fragmentData2);
       const result = await readFragmentData('a', 'f');
-      expect(result).not.toEqual(fragmentData1);
+      expect(result).not.toStrictEqual(fragmentData1);
       expect(result).toStrictEqual(fragmentData2);
     });
   });

@@ -17,14 +17,14 @@ describe('memory-db', () => {
     const data = { value: 123 };
     await db.put('a', 'b', data);
     const result = await db.get('a', 'b');
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 
   test('put() and get() work with Buffers', async () => {
     const data = Buffer.from([1, 2, 3]);
     await db.put('a', 'b', data);
     const result = await db.get('a', 'b');
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 
   test('get() with incorrect secondaryKey returns nothing', async () => {
@@ -40,7 +40,7 @@ describe('memory-db', () => {
 
     const results = await db.query('a');
     expect(Array.isArray(results)).toBe(true);
-    expect(results).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
+    expect(results).toStrictEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
   });
 
   test('query() returns empty array', async () => {
@@ -50,12 +50,12 @@ describe('memory-db', () => {
 
     const results = await db.query('a');
     expect(Array.isArray(results)).toBe(true);
-    expect(results).toEqual([]);
+    expect(results).toStrictEqual([]);
   });
 
   test('del() removes value put() into db', async () => {
     await db.put('a', 'a', { value: 1 });
-    expect(await db.get('a', 'a')).toEqual({ value: 1 });
+    expect(await db.get('a', 'a')).toStrictEqual({ value: 1 });
     await db.del('a', 'a');
     expect(await db.get('a', 'a')).toBeUndefined();
   });

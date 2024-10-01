@@ -6,7 +6,7 @@ describe('API Responses', () => {
   test('createErrorResponse()', () => {
     const errorResponse = createErrorResponse(404, 'not found');
     // Expect the result to look like the following
-    expect(errorResponse).toEqual({
+    expect(errorResponse).toStrictEqual({
       status: 'error',
       error: {
         code: 404,
@@ -20,7 +20,7 @@ describe('API Responses', () => {
     // No arg passed
     const successResponse = createSuccessResponse();
     // Expect the result to look like the following
-    expect(successResponse).toEqual({
+    expect(successResponse).toStrictEqual({
       status: 'ok',
     });
   });
@@ -31,7 +31,7 @@ describe('API Responses', () => {
     const data = { a: 1, b: 2 };
     const successResponse = createSuccessResponse(data);
     // Expect the result to look like the following
-    expect(successResponse).toEqual({
+    expect(successResponse).toStrictEqual({
       status: 'ok',
       a: 1,
       b: 2,
