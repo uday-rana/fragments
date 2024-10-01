@@ -1,6 +1,6 @@
 const request = require('supertest');
-
 const app = require('../../src/app');
+const hash = require('../../src/hash');
 
 // Wait for a certain number of ms. Feel free to change this value
 // if it isn't long enough for your test runs. Returns a Promise.
@@ -25,8 +25,7 @@ describe('POST /v1/fragments', () => {
       const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
-      // TODO: update this test with src/hash.js once implemented
-      expect(res.body.fragment.ownerId).toStrictEqual(ownerEmail);
+      expect(res.body.fragment.ownerId).toStrictEqual(hash(ownerEmail));
       expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(rawData));
       expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
       expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
