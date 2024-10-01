@@ -148,7 +148,7 @@ describe('Fragment class', () => {
       expect(fragment.mimeType).toEqual('text/plain');
     });
 
-    test('isText return expected results', () => {
+    test('isText returns expected results', () => {
       // Text fragment
       const fragment = new Fragment({
         ownerId: '1234',
