@@ -1,7 +1,6 @@
 const request = require('supertest');
 
 const app = require('../../src/app');
-const Fragment = require('../../src/model/fragment');
 
 // Wait for a certain number of ms. Feel free to change this value
 // if it isn't long enough for your test runs. Returns a Promise.
@@ -15,6 +14,7 @@ describe('POST /v1/fragments', () => {
   describe('happy path', () => {
     test('authenticated users posting raw binary data of supported content-type get successful response', async () => {
       const rawData = Buffer.from('hello');
+      const ownerEmail = 'user1@email.com';
       const dateBeforeReq = new Date();
       await wait();
       const res = await request(app)
@@ -22,16 +22,15 @@ describe('POST /v1/fragments', () => {
         .auth('user1@email.com', 'password1')
         .type('text/plain')
         .send(rawData);
+      const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
-      expect(res.body.fragment).toBeInstanceOf(Fragment);
-      // TODO: complete this test using src/hash.js once implemented
-      // expect(res.body.fragment.ownerId).toEqual()
+      // TODO: update this test with src/hash.js once implemented
+      expect(res.body.fragment.ownerId).toEqual(ownerEmail);
       expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(rawData));
-      expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(dateBeforeReq);
-      expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(dateBeforeReq);
-      // TODO: update to check for full url with API_KEY env once implemented
-      expect(res.headers.location.endsWith(res.body.fragment.id)).toBeTruthy();
+      expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
+      expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
+      expect(res.headers.location).toEqual(expectedLocationURL);
     });
   });
 
