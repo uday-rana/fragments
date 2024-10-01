@@ -131,7 +131,6 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    // TODO
     /**
      * Type 	Valid Conversion Extensions
      * text/plain 	.txt
