@@ -50,11 +50,17 @@ describe('fragment memory-db functions', () => {
       for (const fragment of fragments) {
         await writeFragment(fragment);
       }
-      expect(await listFragments('b')).toEqual(['a', 'b', 'c']);
-      expect(await listFragments('b', true)).toEqual(fragments);
+      expect(await listFragments('b')).toStrictEqual(['a', 'b', 'c']);
+      expect(await listFragments('b', true)).toStrictEqual(fragments);
     });
 
-    test('deleteFragment() deletes fragment metadata and data', async () => {
+    test('deleteFragment() returns [undefined, undefined]', async () => {
+      const fragment = { ownerId: 'a', id: 'c', someMetadata: true };
+      await writeFragment(fragment);
+      expect(await deleteFragment('a', 'c')).toStrictEqual([undefined, undefined]);
+    });
+
+    test('readFragment() and readFragmentData() return undefined for deleted fragments', async () => {
       const fragment = { ownerId: 'a', id: 'd', someMetadata: true };
       const fragmentData = { someData: true };
       await writeFragment(fragment);
@@ -154,7 +160,7 @@ describe('fragment memory-db functions', () => {
 
     test('listFragments() returns empty array if primary key not in db', async () => {
       const result = await listFragments('z');
-      expect(result).toEqual([]);
+      expect(result).toStrictEqual([]);
     });
 
     test('deleteFragment() throws if primary key not in db', async () => {
@@ -166,41 +172,41 @@ describe('fragment memory-db functions', () => {
 
   describe('primary key in db but not secondary key', () => {
     test('readFragment() returns undefined if secondary key not in db', async () => {
-      const result = await readFragment('a', 'd');
+      const result = await readFragment('a', 'e');
       expect(result).toBeUndefined();
     });
 
     test('readFragmentData() returns undefined if secondary key not in db', async () => {
-      const result = await readFragmentData('a', 'd');
+      const result = await readFragmentData('a', 'e');
       expect(result).toBeUndefined();
     });
 
     test('deleteFragment() throws if secondary key not in db', async () => {
       expect(async () => {
-        await deleteFragment('a', 'd');
+        await deleteFragment('a', 'e');
       }).rejects.toThrow();
     });
   });
 
   describe('passing same keys to write functions twice', () => {
     test('writeFragment() overwrites previous values given same keys', async () => {
-      const fragment1 = { ownerId: 'a', id: 'd', someMetadata: true };
-      const fragment2 = { ownerId: 'a', id: 'd', someMetadata: false };
+      const fragment1 = { ownerId: 'a', id: 'f', someMetadata: true };
+      const fragment2 = { ownerId: 'a', id: 'f', someMetadata: false };
       await writeFragment(fragment1);
       await writeFragment(fragment2);
-      const result = await readFragment('a', 'd');
+      const result = await readFragment('a', 'f');
       expect(result).not.toEqual(fragment1);
-      expect(result).toEqual(fragment2);
+      expect(result).toStrictEqual(fragment2);
     });
 
     test('writeFragmentData() overwrites previous values given same keys', async () => {
       const fragmentData1 = { someData: true };
       const fragmentData2 = { someData: false };
-      await writeFragmentData('a', 'e', fragmentData1);
-      await writeFragmentData('a', 'e', fragmentData2);
-      const result = await readFragmentData('a', 'e');
+      await writeFragmentData('a', 'f', fragmentData1);
+      await writeFragmentData('a', 'f', fragmentData2);
+      const result = await readFragmentData('a', 'f');
       expect(result).not.toEqual(fragmentData1);
-      expect(result).toEqual(fragmentData2);
+      expect(result).toStrictEqual(fragmentData2);
     });
   });
 });
