@@ -20,7 +20,7 @@ describe('fragment memory-db functions', () => {
       expect(result).toBeUndefined();
     });
 
-    test('readFragment() returns what we pass to writeFragment()', async () => {
+    test('readFragment() returns fragment passed to writeFragment()', async () => {
       const fragment = { ownerId: 'a', id: 'b', someMetadata: true };
       await writeFragment(fragment);
       const result = await readFragment('a', 'b');
@@ -41,12 +41,27 @@ describe('fragment memory-db functions', () => {
       expect(result).toBe(fragmentDataBuffer);
     });
 
-    test('listFragments()', async () => {
-      expect('a').toBe('b');
+    test('listFragments() lists all fragments for an ownerId', async () => {
+      const fragments = [
+        { ownerId: 'b', id: 'a', someMetadata: true },
+        { ownerId: 'b', id: 'b', someMetadata: false },
+        { ownerId: 'b', id: 'c', someMetadata: false },
+      ];
+      for (const fragment of fragments) {
+        await writeFragment(fragment);
+      }
+      expect(await listFragments('b')).toEqual(['a', 'b', 'c']);
+      expect(await listFragments('b', true)).toEqual(fragments);
     });
 
-    test('deleteFragment()', async () => {
-      expect('a').toBe('b');
+    test('deleteFragment() deletes fragment metadata and data', async () => {
+      const fragment = { ownerId: 'a', id: 'd', someMetadata: true };
+      const fragmentData = { someData: true };
+      await writeFragment(fragment);
+      await writeFragmentData('a', 'd', fragmentData);
+      await deleteFragment('a', 'd');
+      expect(await readFragment('a', 'd')).toBeUndefined();
+      expect(await readFragmentData('a', 'd')).toBeUndefined();
     });
   });
 
@@ -107,32 +122,45 @@ describe('fragment memory-db functions', () => {
       }).rejects.toThrow();
     });
 
-    test('listFragments()', async () => {
-      expect('a').toBe('b');
+    test('listFragments() throws on non-string keys', async () => {
+      expect(async () => {
+        await listFragments(1);
+      }).rejects.toThrow();
+      expect(async () => {
+        await listFragments(1, true);
+      }).rejects.toThrow();
     });
 
-    test('deleteFragment()', async () => {
-      expect('a').toBe('b');
+    test('deleteFragment() throws on non-string keys', async () => {
+      expect(async () => {
+        await deleteFragment(1);
+      }).rejects.toThrow();
+      expect(async () => {
+        await deleteFragment(1, 1);
+      }).rejects.toThrow();
     });
   });
 
   describe('primary key not in db', () => {
     test('readFragment() returns undefined if primary key not in db', async () => {
-      const result = await readFragment('b', 'a');
+      const result = await readFragment('z', 'a');
       expect(result).toBeUndefined();
     });
 
     test('readFragmentData() returns undefined if primary key not in db', async () => {
-      const result = await readFragmentData('b', 'a');
+      const result = await readFragmentData('z', 'a');
       expect(result).toBeUndefined();
     });
 
-    test('listFragments()', async () => {
-      expect('a').toBe('b');
+    test('listFragments() returns empty array if primary key not in db', async () => {
+      const result = await listFragments('z');
+      expect(result).toEqual([]);
     });
 
-    test('deleteFragment()', async () => {
-      expect('a').toBe('b');
+    test('deleteFragment() throws if primary key not in db', async () => {
+      expect(async () => {
+        await deleteFragment('z', 'a');
+      }).rejects.toThrow();
     });
   });
 
@@ -147,8 +175,10 @@ describe('fragment memory-db functions', () => {
       expect(result).toBeUndefined();
     });
 
-    test('deleteFragment()', async () => {
-      expect('a').toBe('b');
+    test('deleteFragment() throws if secondary key not in db', async () => {
+      expect(async () => {
+        await deleteFragment('a', 'd');
+      }).rejects.toThrow();
     });
   });
 
