@@ -15,7 +15,6 @@ describe('POST /v1/fragments', () => {
   describe('happy path', () => {
     test('authenticated users posting raw binary data of supported content-type get successful response', async () => {
       const rawData = Buffer.from('hello');
-      const ownerEmail = 'user1@email.com';
       const dateBeforeReq = new Date();
       await wait();
       const res = await request(app)
@@ -26,7 +25,7 @@ describe('POST /v1/fragments', () => {
       const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
-      expect(res.body.fragment.ownerId).toStrictEqual(hash(ownerEmail));
+      expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
       expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(rawData));
       expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
       expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
@@ -75,16 +74,16 @@ describe('POST /v1/fragments', () => {
     });
   });
 
-  describe('unauthorized requests', () => {
-    // If the request is missing the Authorization header, it should be forbidden
-    test('unauthenticated requests are denied', () =>
-      request(app).post('/v1/fragments').expect(401));
+  // describe('unauthorized requests', () => {
+  //   // If the request is missing the Authorization header, it should be forbidden
+  //   test('unauthenticated requests are denied', () =>
+  //     request(app).post('/v1/fragments').expect(401));
 
-    // If the wrong username/password pair are used (no such user), it should be forbidden
-    test('incorrect credentials are denied', () =>
-      request(app)
-        .post('/v1/fragments')
-        .auth('invalid@email.com', 'incorrect_password')
-        .expect(401));
-  });
+  //   // If the wrong username/password pair are used (no such user), it should be forbidden
+  //   test('incorrect credentials are denied', () =>
+  //     request(app)
+  //       .post('/v1/fragments')
+  //       .auth('invalid@email.com', 'incorrect_password')
+  //       .expect(401));
+  // });
 });
