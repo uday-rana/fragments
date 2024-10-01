@@ -9,7 +9,7 @@ const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms)
 
 describe('POST /v1/fragments', () => {
   // test conditions:
-  // - auth: authenticated/unauthenticated/no user
+  // - auth: authenticated/invalid user info/no user info
   // - file: raw binary data (buffer)/non raw binary data (not buffer)/no file
   // - content-type header: supported/not supported/not set
   describe('happy path', () => {
@@ -35,8 +35,7 @@ describe('POST /v1/fragments', () => {
     });
   });
 
-  describe('erronous data in request body', () => {
-    // Could maybe combine these tests, depends on how the request looks when no data is sent
+  describe('erroneous data in request body', () => {
     test('non-buffer data sent in request body', async () => {
       const rawData = 'hello';
       const res = await request(app)
@@ -44,7 +43,7 @@ describe('POST /v1/fragments', () => {
         .auth('user1@email.com', 'password1')
         .type('plain/text')
         .send(rawData);
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(415);
     });
 
     test('no data sent in request body', async () => {
@@ -52,11 +51,11 @@ describe('POST /v1/fragments', () => {
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .type('plain/text');
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(415);
     });
   });
 
-  describe('erronous content-type header in request', () => {
+  describe('erroneous content-type header in request', () => {
     test('unsupported content-type set in request header', async () => {
       const rawData = Buffer.from('hello');
       const res = await request(app)
