@@ -2,8 +2,8 @@
  * The main entry-point for the v1 version of the fragments API.
  */
 const express = require('express');
-
 const contentType = require('content-type');
+
 const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 

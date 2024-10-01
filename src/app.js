@@ -3,10 +3,11 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const passport = require('passport');
+
 const authenticate = require('./auth');
 const { createErrorResponse } = require('./response');
-
 const logger = require('./logger');
+
 const pino = require('pino-http')({
   // Use our default logger instance, which is already configured
   logger,
