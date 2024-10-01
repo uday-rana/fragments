@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
   // Client's shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
   // Send a 200 'OK' response
-  res.status(200).json(
+  return res.status(200).json(
     createSuccessResponse({
       author,
       // Use your own GitHub URL for this!
