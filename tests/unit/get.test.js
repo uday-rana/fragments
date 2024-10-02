@@ -18,5 +18,40 @@ describe('GET /v1/fragments', () => {
     expect(Array.isArray(res.body.fragments)).toBe(true);
   });
 
-  // TODO: we'll need to add tests to check the contents of the fragments array later
+  test('data returned from GET contains data sent to POST', async () => {
+    const rawData = Buffer.from('hello');
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .type('text/plain')
+      .send(rawData);
+    const getRes = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
+    expect(getRes.body.fragments).toEqual(expect.arrayContaining([postRes.body.fragment.id]));
+  });
+
+  test('expanded data returned from GET matches data sent to POST', async () => {
+    const rawData = Buffer.from('hello');
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .type('text/plain')
+      .send(rawData);
+    const getRes = await request(app)
+      .get('/v1/fragments?expand=1')
+      .auth('user1@email.com', 'password1');
+    expect(getRes.body.fragments).toEqual(expect.arrayContaining([postRes.body.fragment]));
+  });
+
+  test('"expand" query parameter passed any value other than 1 returns unexpanded data', async () => {
+    const rawData = Buffer.from('hello');
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .type('text/plain')
+      .send(rawData);
+    const getRes = await request(app)
+      .get('/v1/fragments?expand=maybe')
+      .auth('user1@email.com', 'password1');
+    expect(getRes.body.fragments).toEqual(expect.arrayContaining([postRes.body.fragment.id]));
+  });
 });
