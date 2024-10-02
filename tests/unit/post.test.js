@@ -8,10 +8,6 @@ const hash = require('../../src/hash');
 const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('POST /v1/fragments', () => {
-  // test conditions:
-  // - auth: authenticated/invalid user info/no user info
-  // - file: raw binary data (buffer)/non raw binary data (not buffer)/no file
-  // - content-type header: supported/not supported/not set
   describe('happy path', () => {
     test('authenticated users posting raw binary data of supported content-type get successful response', async () => {
       const rawData = Buffer.from('hello');

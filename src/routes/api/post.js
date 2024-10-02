@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
     await newFragment.save();
   } catch (error) {
     logger.error({ error }, `Error saving fragment`);
-    // We verify input so any error can only be a server error
+    // Since input is verified any error can only be a server error
     return res.status(500).json(createErrorResponse(500, `Error saving fragment`));
   }
   try {

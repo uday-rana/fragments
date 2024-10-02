@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     return res.status(200).json(createSuccessResponse({ fragments: result }));
   } catch (error) {
     logger.error({ error }, `Error getting fragments for user`);
-    // We verify input so any error can only be a server error
+    // Since input is verified any error can only be a server error
     return res.status(500).json(createErrorResponse(500, 'Error getting fragments for user'));
   }
 };
