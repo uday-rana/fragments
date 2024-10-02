@@ -6,8 +6,8 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
  * Creates a new fragment for the current user (i.e., authenticated user)
  */
 module.exports = async (req, res) => {
-  logger.debug({ req, reqBody: req.body }, `Incoming request: POST /v1/fragments`);
-  // handle incorrect content-type or malformed request body
+  logger.debug({ req }, `Incoming request: POST /v1/fragments`);
+  // Handle invalid/unsupported content-type headers and/or malformed request body
   if (!Buffer.isBuffer(req.body)) {
     return res.status(415).json(createErrorResponse(415, 'Unsupported media type'));
   }
@@ -21,16 +21,24 @@ module.exports = async (req, res) => {
   });
   try {
     await newFragment.save();
+    logger.info(
+      { userId: newFragment.ownerId, fragmentId: newFragment.id },
+      `Created new fragment`
+    );
   } catch (error) {
-    logger.error({ error }, `Error saving fragment`);
-    // Since input is verified any error can only be a server error
-    return res.status(500).json(createErrorResponse(500, `Error saving fragment`));
+    logger.error({ error }, `Error creating new fragment`);
+    // Since input is verified, any error can only be a server error
+    return res.status(500).json(createErrorResponse(500, `Error creating new fragment`));
   }
   try {
     await newFragment.setData(req.body);
+    logger.info(
+      { userId: newFragment.ownerId, fragmentId: newFragment.id },
+      `Saved data for new fragment`
+    );
   } catch (error) {
-    logger.error({ error }), `Error saving fragment data`;
-    return res.status(500).json(createErrorResponse(500, `Error saving fragment data`));
+    logger.error({ error }), `Error saving data for new fragment`;
+    return res.status(500).json(createErrorResponse(500, `Error saving data for new fragment`));
   }
   logger.debug(
     `Constructing URL: ${process.env?.API_URL || req.headers?.host}/v1/fragments/${newFragment.id}`
