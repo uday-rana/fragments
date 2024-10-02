@@ -30,7 +30,7 @@ describe('POST /v1/fragments', () => {
   });
 
   describe('erroneous data in request body', () => {
-    test('non-buffer data sent in request body', async () => {
+    test('non-buffer data sent in request body returns status 415', async () => {
       const rawData = 'hello';
       const res = await request(app)
         .post('/v1/fragments')
@@ -40,7 +40,7 @@ describe('POST /v1/fragments', () => {
       expect(res.statusCode).toBe(415);
     });
 
-    test('no data sent in request body', async () => {
+    test('no data sent in request body returns status 415', async () => {
       const res = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -50,7 +50,7 @@ describe('POST /v1/fragments', () => {
   });
 
   describe('erroneous content-type header in request', () => {
-    test('unsupported content-type set in request header', async () => {
+    test('unsupported content-type set in request header returns status 415', async () => {
       const rawData = Buffer.from('hello');
       const res = await request(app)
         .post('/v1/fragments')
@@ -60,7 +60,7 @@ describe('POST /v1/fragments', () => {
       expect(res.statusCode).toBe(415);
     });
 
-    test('content-type not set in request header', async () => {
+    test('content-type not set in request header returns status 415', async () => {
       const rawData = Buffer.from('hello');
       const res = await request(app)
         .post('/v1/fragments')

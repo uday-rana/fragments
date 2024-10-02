@@ -18,7 +18,7 @@ describe('GET /v1/fragments', () => {
     expect(Array.isArray(res.body.fragments)).toBe(true);
   });
 
-  test('data returned from GET contains data sent to POST', async () => {
+  test('data returned contains data sent to POST', async () => {
     const rawData = Buffer.from('hello');
     const responseFromPOST = await request(app)
       .post('/v1/fragments')
@@ -33,7 +33,7 @@ describe('GET /v1/fragments', () => {
     );
   });
 
-  test('expanded data returned from GET matches data sent to POST', async () => {
+  test('expanded data returned matches data sent to POST', async () => {
     const rawData = Buffer.from('hello');
     const responseFromPOST = await request(app)
       .post('/v1/fragments')
@@ -48,7 +48,7 @@ describe('GET /v1/fragments', () => {
     );
   });
 
-  test('"expand" query parameter passed any value other than 1 returns unexpanded data', async () => {
+  test('"expand" query parameter passed unsupported value returns unexpanded data', async () => {
     const rawData = Buffer.from('hello');
     const responseFromPOST = await request(app)
       .post('/v1/fragments')
