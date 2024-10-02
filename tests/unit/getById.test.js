@@ -24,7 +24,6 @@ describe('GET /v1/fragments/:id', () => {
     const responseFromGET = await request(app)
       .get(`/v1/fragments/${responseFromPOST.body.fragment.id}`)
       .auth('user1@email.com', 'password1');
-    console.log(`rawData: ${rawData}`);
     expect(responseFromGET.body).toEqual(rawData);
   });
 });
