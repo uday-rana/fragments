@@ -7,21 +7,36 @@ const { createErrorResponse } = require('../../response');
  */
 module.exports = async (req, res) => {
   logger.debug({ req }, `Incoming request: GET /v1/fragments/:id`);
+  let foundFragment;
+  let foundFragmentData;
   try {
-    const resultFragment = await Fragment.byId(req.user, req.params.id);
-    logger.info(
-      { userId: resultFragment.ownerId, fragmentId: resultFragment.id },
-      `Retreived fragment by id`
-    );
-    const resultFragmentData = await resultFragment.getData();
-    logger.info(
-      { userId: resultFragment.ownerId, fragmentId: resultFragment.id },
-      `Retreived fragment data by id`
-    );
-    return res.status(200).send(resultFragmentData);
+    foundFragment = await Fragment.byId(req.user, req.params.id);
   } catch (error) {
-    logger.error({ error }, `Error getting fragment by id`);
-    // Since input is verified, any error can only be a server error
-    return res.status(500).json(createErrorResponse(500, 'Error getting fragments for user'));
+    // If not found, handle it here, else pass it up to the error handler
+    if (error.message == `fragment id ${req.params.id} not found`) {
+      logger.error({ error }, `Error getting fragment by id`);
+      return res
+        .status(404)
+        .json(createErrorResponse(404, `fragment id ${req.params.id} not found`));
+    } else {
+      throw error;
+    }
   }
+  logger.info(
+    { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
+    `Retreived fragment by id`
+  );
+  try {
+    foundFragmentData = await foundFragment.getData();
+  } catch (error) {
+    logger.error({ error }, `Error getting data for requested fragment`);
+    return res
+      .status(500)
+      .json(createErrorResponse(500, `Error getting data for requested fragment`));
+  }
+  logger.info(
+    { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
+    `Retreived fragment data by id`
+  );
+  return res.status(200).send(foundFragmentData);
 };

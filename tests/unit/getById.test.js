@@ -26,4 +26,11 @@ describe('GET /v1/fragments/:id', () => {
       .auth('user1@email.com', 'password1');
     expect(responseFromGET.body).toEqual(rawData);
   });
+
+  test('invalid id parameter passed', async () => {
+    const res = await request(app)
+      .get(`/v1/fragments/notARealId`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(404);
+  });
 });
