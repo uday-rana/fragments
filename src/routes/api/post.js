@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     );
   } catch (error) {
     logger.error({ error }, `Error creating new fragment`);
-    // Since input is verified, any error can only be a server error
+    // Since input errors are handled above, any error at this point can only be a server error
     return res.status(500).json(createErrorResponse(500, `Error creating new fragment`));
   }
   try {
@@ -41,7 +41,8 @@ module.exports = async (req, res) => {
     return res.status(500).json(createErrorResponse(500, `Error saving data for new fragment`));
   }
   logger.debug(
-    `Constructing URL: ${process.env?.API_URL || req.headers?.host}/v1/fragments/${newFragment.id}`
+    `${process.env?.API_URL || req.headers?.host}/v1/fragments/${newFragment.id}`,
+    `Constructing URL`
   );
   const locationURL = new URL(
     `/v1/fragments/${newFragment.id}`,

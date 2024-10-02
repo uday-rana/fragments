@@ -8,16 +8,16 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
 module.exports = async (req, res) => {
   logger.debug({ req }, `Incoming request: GET /v1/fragments`);
   try {
-    const resultFragments = await Fragment.byUser(req.user, req.query.expand == 1);
-    // Log ids of all fragments in array
-    // If expand parameter passed, need to extract ids
-    const resultFragmentsIds =
-      req.query.expand == 1 ? resultFragments.map((fragment) => fragment.id) : resultFragments;
+    const foundFragments = await Fragment.byUser(req.user, req.query.expand == 1);
+    // Get IDs of all fragments for logging
+    // If expand parameter passed, need to extract IDs
+    const foundFragmentsIds =
+      req.query.expand == 1 ? foundFragments.map((fragment) => fragment.id) : foundFragments;
     logger.info(
-      { userId: req.user, fragmentIds: resultFragmentsIds },
+      { userId: req.user, fragmentIds: foundFragmentsIds },
       `Retreived fragments for user`
     );
-    return res.status(200).json(createSuccessResponse({ fragments: resultFragments }));
+    return res.status(200).json(createSuccessResponse({ fragments: foundFragments }));
   } catch (error) {
     logger.error({ error }, `Error getting fragments for user`);
     // Since input is verified, any error can only be a server error
