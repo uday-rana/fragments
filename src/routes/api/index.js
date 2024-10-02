@@ -17,7 +17,7 @@ const rawBody = () =>
       // a Buffer (e.g., `Buffer.isBuffer(req.body) === true`). If not, `req.body`
       // will be equal to an empty Object `{}` and `Buffer.isBuffer(req.body) === false`
       try {
-        // will throw if invalid or missing header
+        // Will throw if invalid or missing header
         const { type } = contentType.parse(req);
         return Fragment.isSupportedType(type);
       } catch (error) {

@@ -148,7 +148,6 @@ class Fragment {
     switch (this.mimeType) {
       case 'text/plain':
         return ['text/plain'];
-
       default:
         return [];
     }
