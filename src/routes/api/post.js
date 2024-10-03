@@ -11,15 +11,13 @@ module.exports = async (req, res) => {
   if (!Buffer.isBuffer(req.body)) {
     return res.status(415).json(createErrorResponse(415, 'Unsupported media type'));
   }
-  const newFragmentOwnerId = req.user;
-  const newFragmentType = req.headers['content-type'];
-  const newFragmentSize = Buffer.byteLength(req.body);
   const newFragment = new Fragment({
-    ownerId: newFragmentOwnerId,
-    type: newFragmentType,
-    size: newFragmentSize,
+    ownerId: req.user,
+    type: req.headers['content-type'],
+    size: Buffer.byteLength(req.body),
   });
   try {
+    // Save the fragment's metadata to the database
     await newFragment.save();
     logger.info(
       { userId: newFragment.ownerId, fragmentId: newFragment.id },
@@ -31,6 +29,7 @@ module.exports = async (req, res) => {
     return res.status(500).json(createErrorResponse(500, `Error creating new fragment`));
   }
   try {
+    // Save the fragment's data to the database
     await newFragment.setData(req.body);
     logger.info(
       { userId: newFragment.ownerId, fragmentId: newFragment.id },
