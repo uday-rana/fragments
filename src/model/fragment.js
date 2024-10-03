@@ -64,7 +64,9 @@ class Fragment {
     // for consistency with byUser...
     const fragment = await readFragment(ownerId, id);
     if (typeof fragment === 'undefined') {
-      throw new Error(`fragment id ${id} not found`);
+      let err = new Error(`fragment id ${id} not found`);
+      err.name = 'NotFoundError';
+      throw err;
     }
     return Promise.resolve(fragment);
   }

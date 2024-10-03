@@ -12,9 +12,8 @@ module.exports = async (req, res) => {
   try {
     foundFragment = await Fragment.byId(req.user, req.params.id);
   } catch (error) {
-    // If 404 error, handle it here, else pass it up to the error handler
-    // This doesn't seem like a good way to check the error type but IDK how else to do it
-    if (error.message == `fragment id ${req.params.id} not found`) {
+    // If fragment not found, handle it here, else pass it up to the error handler
+    if (error.name == 'NotFoundError') {
       logger.error({ error }, `Error getting fragment by id`);
       return res
         .status(404)
