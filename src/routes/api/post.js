@@ -39,14 +39,11 @@ module.exports = async (req, res) => {
     logger.error({ error }), `Error saving data for new fragment`;
     return res.status(500).json(createErrorResponse(500, `Error saving data for new fragment`));
   }
-  logger.debug(
-    `${process.env?.API_URL || req.headers?.host}/v1/fragments/${newFragment.id}`,
-    `Constructing URL`
-  );
   const locationURL = new URL(
     `/v1/fragments/${newFragment.id}`,
     `https://${process.env?.API_URL || req.headers?.host}`
   );
+  logger.debug({ locationURL }, `Constructed URL for new fragment`);
   return res
     .status(201)
     .set('location', locationURL)
