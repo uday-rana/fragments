@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   try {
     const foundFragments = await Fragment.byUser(req.user, req.query.expand == 1);
     // Get IDs of all fragments for logging
-    // If expand parameter passed, need to extract IDs
+    // If fragments are expanded, extract IDs
     const foundFragmentsIds =
       req.query.expand == 1 ? foundFragments.map((fragment) => fragment.id) : foundFragments;
     logger.info(
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     return res.status(200).json(createSuccessResponse({ fragments: foundFragments }));
   } catch (error) {
     logger.error({ error }, `Error getting fragments for user`);
-    // Since input is verified, any error can only be a server error
+    // Since user is authenticated, any error can only be a server error
     return res.status(500).json(createErrorResponse(500, 'Error getting fragments for user'));
   }
 };

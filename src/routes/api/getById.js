@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
   try {
     foundFragment = await Fragment.byId(req.user, req.params.id);
   } catch (error) {
-    // If not found, handle it here, else pass it up to the error handler
+    // If 404 error, handle it here, else pass it up to the error handler
     if (error.message == `fragment id ${req.params.id} not found`) {
       logger.error({ error }, `Error getting fragment by id`);
       return res
@@ -30,6 +30,7 @@ module.exports = async (req, res) => {
     foundFragmentData = await foundFragment.getData();
   } catch (error) {
     logger.error({ error }, `Error getting data for requested fragment`);
+    // Since the fragment was found, any error getting it's data must be a server error
     return res
       .status(500)
       .json(createErrorResponse(500, `Error getting data for requested fragment`));
