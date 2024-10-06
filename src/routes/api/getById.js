@@ -12,15 +12,16 @@ module.exports = async (req, res) => {
   try {
     foundFragment = await Fragment.byId(req.user, req.params.id);
   } catch (error) {
-    // If fragment not found, handle it here, else pass it up to the error handler
-    if (error.name == 'NotFoundError') {
-      logger.error({ error }, `Error getting fragment by id`);
-      return res
-        .status(404)
-        .json(createErrorResponse(404, `fragment id ${req.params.id} not found`));
-    } else {
-      throw error;
-    }
+    logger.error({ error }, `Error getting fragment by id`);
+    const statusCode = error.name == 'NotFoundError' ? 404 : 500;
+    return res
+      .status(statusCode)
+      .json(
+        createErrorResponse(
+          statusCode,
+          statusCode == 404 ? error.message : `Error getting fragment by id`
+        )
+      );
   }
   logger.info(
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
