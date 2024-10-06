@@ -46,6 +46,6 @@ module.exports = async (req, res) => {
   logger.debug({ locationURL }, `Constructed URL for new fragment`);
   return res
     .status(201)
-    .set('location', locationURL)
+    .set('Location', locationURL)
     .json(createSuccessResponse({ fragment: newFragment }));
 };
