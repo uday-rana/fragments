@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       req.query.expand == 1 ? foundFragments.map((fragment) => fragment.id) : foundFragments;
     logger.info(
       { userId: req.user, fragmentIds: foundFragmentsIds },
-      `Retreived fragments for user`
+      `Retrieved fragments for user`
     );
     return res.status(200).json(createSuccessResponse({ fragments: foundFragments }));
   } catch (error) {

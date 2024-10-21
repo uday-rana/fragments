@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
   }
   logger.info(
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
-    `Retreived fragment by id`
+    `Retrieved fragment by id`
   );
   try {
     foundFragmentData = await foundFragment.getData();
@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
   }
   logger.info(
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
-    `Retreived fragment data by id`
+    `Retrieved fragment data by id`
   );
   return res.status(200).send(foundFragmentData);
 };
