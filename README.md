@@ -32,7 +32,7 @@ To run the server in dev mode and automatically restart it when changes are made
 
 ### Using a debugger
 
-To attach a debugger (e.g. [VSCode](https://code.visualstudio.com/docs/editor/debugging)), configure it using  the `npm run debug` script. (Refer to debugger documentation)
+To attach a debugger (e.g. [VSCode](https://code.visualstudio.com/docs/editor/debugging)), configure it using the `npm run debug` script. (Refer to debugger documentation)
 
 ```jsonc
 // package.json
@@ -59,9 +59,9 @@ To attach a debugger (e.g. [VSCode](https://code.visualstudio.com/docs/editor/de
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run-script", "debug"],
       "skipFiles": ["<node_internals>/**"],
-      "type": "node"
-    }
-  ]
+      "type": "node",
+    },
+  ],
 }
 ```
 
