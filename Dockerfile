@@ -59,7 +59,7 @@ COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
 # Install curl to run a health check on the API
 # Don't need to update/upgrade when using --no-cache
 # https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl=8.10.1-r0
 
 # Copy package.json from the build context (the app imports data from it)
 COPY --chown=node:node package.json ./
