@@ -108,7 +108,7 @@ class Fragment {
       throw new Error('in function setData, argument "data" must be of type Buffer');
     }
     this.size = Buffer.byteLength(data);
-    this.updated = new Date().toISOString();
+    this.save();
     return writeFragmentData(this.ownerId, this.id, data);
   }
 
