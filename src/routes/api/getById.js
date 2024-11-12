@@ -6,7 +6,15 @@ const { createErrorResponse } = require('../../response');
  * Get a fragment for the user by the given id
  */
 module.exports = async (req, res) => {
-  logger.debug({ req }, `Incoming request: GET /v1/fragments/:id`);
+  logger.debug(
+    {
+      user: req.user,
+      params: {
+        id: req.params.id,
+      },
+    },
+    `Incoming request: GET /v1/fragments/:id`
+  );
   let foundFragment;
   let foundFragmentData;
   try {

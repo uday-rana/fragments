@@ -6,7 +6,15 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
  * Get a list of fragments for the current user
  */
 module.exports = async (req, res) => {
-  logger.debug({ req }, `Incoming request: GET /v1/fragments`);
+  logger.debug(
+    {
+      user: req.user,
+      query: {
+        expand: req.query.expand,
+      },
+    },
+    `Incoming request: GET /v1/fragments`
+  );
   try {
     const foundFragments = await Fragment.byUser(req.user, req.query.expand == 1);
     // Get IDs of all fragments for logging

@@ -6,7 +6,17 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
  * Creates a new fragment for the current user (i.e., authenticated user)
  */
 module.exports = async (req, res) => {
-  logger.debug({ req }, `Incoming request: POST /v1/fragments`);
+  logger.debug(
+    {
+      user: req.user,
+      headers: {
+        contentType: req.headers['content-type'],
+        host: req.headers?.host,
+      },
+      body: req.body,
+    },
+    `Incoming request: POST /v1/fragments`
+  );
   // Handle invalid/unsupported content-type headers and/or malformed request body
   if (!Buffer.isBuffer(req.body)) {
     return res.status(415).json(createErrorResponse(415, 'Unsupported media type'));
