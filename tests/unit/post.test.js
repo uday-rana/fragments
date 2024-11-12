@@ -9,15 +9,19 @@ const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms)
 
 describe('POST /v1/fragments', () => {
   describe('happy path', () => {
-    test('authenticated users posting raw binary data of supported content-type get successful response', async () => {
+    test('authenticated users posting raw binary data of supported text/plain content-type get successful response', async () => {
       const rawData = Buffer.from('hello');
+
       const dateBeforeReq = new Date();
+
       await wait();
+
       const res = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .type('text/plain')
         .send(rawData);
+
       const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
@@ -27,6 +31,29 @@ describe('POST /v1/fragments', () => {
       expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
       expect(res.headers.location).toStrictEqual(expectedLocationURL);
     });
+  });
+
+  test('authenticated users posting raw binary data of supported application/json content-type get successful response', async () => {
+    const dateBeforeReq = new Date();
+
+    await wait();
+
+    const jsonData = JSON.stringify({ hello: 'hello' });
+
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .type('application/json')
+      .send(jsonData);
+
+    const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
+    expect(res.statusCode).toBe(201);
+    expect(res.body.status).toBe('ok');
+    expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
+    expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(jsonData));
+    expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
+    expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
+    expect(res.headers.location).toStrictEqual(expectedLocationURL);
   });
 
   describe('erroneous data in request body', () => {
