@@ -14,6 +14,28 @@ const {
   deleteFragment,
 } = require('./data');
 
+/**
+ * Type 	Valid Conversion Extensions
+ * text/plain 	.txt
+ * text/markdown 	.md, .html, .txt
+ * text/html 	.html, .txt
+ * text/csv 	.csv, .txt, .json
+ * application/json 	.json, .yaml, .yml, .txt
+ * application/yaml 	.yaml, .txt
+ * image/png 	.png, .jpg, .webp, .gif, .avif
+ * image/jpeg 	.png, .jpg, .webp, .gif, .avif
+ * image/webp 	.png, .jpg, .webp, .gif, .avif
+ * image/avif 	.png, .jpg, .webp, .gif, .avif
+ * image/gif 	.png, .jpg, .webp, .gif, .avif
+ */
+const supportedTypes = {
+  'text/plain': ['text/plain'],
+  'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
+  'text/html': ['text/html', 'text/plain'],
+  'text/csv': ['text/csv', 'text/plain', 'application/json'],
+  'application/json': ['application/json', 'application/yaml', 'plain/text'],
+};
+
 class Fragment {
   constructor({
     id = randomUUID(),
@@ -135,26 +157,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    /**
-     * Type 	Valid Conversion Extensions
-     * text/plain 	.txt
-     * text/markdown 	.md, .html, .txt
-     * text/html 	.html, .txt
-     * text/csv 	.csv, .txt, .json
-     * application/json 	.json, .yaml, .yml, .txt
-     * application/yaml 	.yaml, .txt
-     * image/png 	.png, .jpg, .webp, .gif, .avif
-     * image/jpeg 	.png, .jpg, .webp, .gif, .avif
-     * image/webp 	.png, .jpg, .webp, .gif, .avif
-     * image/avif 	.png, .jpg, .webp, .gif, .avif
-     * image/gif 	.png, .jpg, .webp, .gif, .avif
-     */
-    switch (this.mimeType) {
-      case 'text/plain':
-        return ['text/plain'];
-      default:
-        return [];
-    }
+    return supportedTypes[this.mimeType] ?? [];
   }
 
   /**
@@ -163,9 +166,8 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    const validTypes = ['text/plain'];
     const { type } = contentType.parse(value);
-    return validTypes.includes(type);
+    return type in supportedTypes;
   }
 }
 
