@@ -29,11 +29,26 @@ const {
  * image/gif 	.png, .jpg, .webp, .gif, .avif
  */
 const supportedTypes = {
-  'text/plain': ['text/plain'],
-  'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
-  'text/html': ['text/html', 'text/plain'],
-  'text/csv': ['text/csv', 'text/plain', 'application/json'],
-  'application/json': ['application/json', 'application/yaml', 'plain/text'],
+  'text/plain': {
+    extensions: ['.txt'],
+    contentTypes: ['text/plain'],
+  },
+  'text/markdown': {
+    extensions: ['.md', '.html', '.txt'],
+    contentTypes: ['text/markdown', 'text/html', 'text/plain'],
+  },
+  'text/html': {
+    extensions: ['.html', '.txt'],
+    contentTypes: ['text/html', 'text/plain'],
+  },
+  'text/csv': {
+    extensions: ['.csv', '.txt', '.json'],
+    contentTypes: ['text/csv', 'text/plain', 'application/json'],
+  },
+  'application/json': {
+    extensions: ['.json', '.yaml', '.yml', '.txt'],
+    contentTypes: ['application/json', 'application/yaml', 'plain/text'],
+  },
 };
 
 class Fragment {
@@ -157,7 +172,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return supportedTypes[this.mimeType] ?? [];
+    return supportedTypes[this.mimeType].contentTypes ?? [];
   }
 
   /**
@@ -172,3 +187,4 @@ class Fragment {
 }
 
 module.exports.Fragment = Fragment;
+module.exports.supportedTypes = supportedTypes;

@@ -1,5 +1,6 @@
+const md = require('markdown-it')();
 const logger = require('../../logger');
-const { Fragment } = require('../../model/fragment');
+const { Fragment, supportedTypes } = require('../../model/fragment');
 const { createErrorResponse } = require('../../response');
 
 /**
@@ -15,13 +16,26 @@ module.exports = async (req, res) => {
     },
     `Incoming request: GET /v1/fragments/:id`
   );
+
   let foundFragment;
   let foundFragmentData;
+  let id = req.params.id;
+  let fileExtension;
+
+  const fileConversionRequested = /\.[a-zA-Z0-9]+$/.test(id);
+
+  if (fileConversionRequested) {
+    fileExtension = id.slice(id.lastIndexOf('.'));
+    id = id.slice(0, id.lastIndexOf('.'));
+  }
+
   try {
-    foundFragment = await Fragment.byId(req.user, req.params.id);
+    foundFragment = await Fragment.byId(req.user, id);
   } catch (error) {
     logger.error({ error }, `Error getting fragment by id`);
+
     const statusCode = error.name == 'NotFoundError' ? 404 : 500;
+
     return res
       .status(statusCode)
       .json(
@@ -31,22 +45,42 @@ module.exports = async (req, res) => {
         )
       );
   }
+
   logger.info(
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
     `Retrieved fragment by id`
   );
+
   try {
     foundFragmentData = await foundFragment.getData();
   } catch (error) {
     logger.error({ error }, `Error getting data for requested fragment`);
+
     // Since the fragment was found, any error getting it's data must be a server error
     return res
       .status(500)
       .json(createErrorResponse(500, `Error getting data for requested fragment`));
   }
+
   logger.info(
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
     `Retrieved fragment data by id`
   );
+
+  if (fileConversionRequested) {
+    const mimeTypeEntry = supportedTypes[foundFragment.mimeType];
+    const matchingExtension = mimeTypeEntry.extensions.find((ext) => fileExtension === ext);
+
+    if (typeof matchingExtension == 'undefined') {
+      return res
+        .status(415)
+        .json(createErrorResponse(415, 'Unsupported extension for file type conversion'));
+    }
+
+    if (foundFragment.mimeType == 'text/markdown' && matchingExtension == '.html') {
+      foundFragmentData = md.render(foundFragmentData.toString());
+    }
+  }
+
   return res.status(200).send(foundFragmentData);
 };

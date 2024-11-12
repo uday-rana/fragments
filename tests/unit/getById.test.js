@@ -33,4 +33,20 @@ describe('GET /v1/fragments/:id', () => {
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(404);
   });
+
+  describe('type conversion', () => {
+    test('markdown is successfully converted to html', async () => {
+      const rawData = Buffer.from('# hello');
+      const responseFromPOST = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .type('text/markdown')
+        .send(rawData);
+      const responseFromGET = await request(app)
+        .get(`/v1/fragments/${responseFromPOST.body.fragment.id}.html`)
+        .auth('user1@email.com', 'password1');
+
+      console.log(responseFromGET.statusCode, responseFromGET.statusMessage);
+    });
+  });
 });
