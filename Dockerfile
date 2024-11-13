@@ -8,12 +8,9 @@
 FROM node:20.18.0-alpine3.20@sha256:c13b26e7e602ef2f1074aef304ce6e9b7dd284c419b35d89fcf3cc8e44a8def9 \
   AS installation_stage
 
-# We set labels and environment variables here so they are inherited by later stages
+# We set labels so they are inherited by later stages
 LABEL author="Uday Rana <uday7453@gmail.com>" \
   description="Fragments node.js microservice"
-
-# We default to use port 8080 in our service
-ENV PORT=8080
 
 # Tell node & npm to perform production environment optimizations
 ENV NODE_ENV=production
@@ -48,6 +45,11 @@ RUN npm ci
 # Use node version 20.18.0 with alpine 3.20
 FROM node:20.18.0-alpine3.20@sha256:c13b26e7e602ef2f1074aef304ce6e9b7dd284c419b35d89fcf3cc8e44a8def9 \
   AS execution_stage
+  
+# We default to use port 8080 in our service
+ENV PORT=8080
+
+ENV NODE_ENV=production
 
 WORKDIR /app
 
