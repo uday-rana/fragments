@@ -52,5 +52,20 @@ describe('GET /v1/fragments/:id', () => {
       expect(responseFromGET.headers['content-length']).toMatch('15');
       expect(responseFromGET.text).toEqual('<h1>hello</h1>\n');
     });
+
+    test('responds with 415 for unsupported conversions', async () => {
+      const rawData = Buffer.from('hello');
+
+      const responseFromPOST = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .type('text/plain')
+        .send(rawData);
+
+      await request(app)
+        .get(`/v1/fragments/${responseFromPOST.body.fragment.id}.handlebars`)
+        .auth('user1@email.com', 'password1')
+        .expect(415);
+    });
   });
 });
