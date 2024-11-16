@@ -21,10 +21,14 @@ describe('GET /v1/fragments/:id', () => {
       .auth('user1@email.com', 'password1')
       .type('text/plain')
       .send(rawData);
+
     const responseFromGET = await request(app)
       .get(`/v1/fragments/${responseFromPOST.body.fragment.id}`)
       .auth('user1@email.com', 'password1');
-    expect(responseFromGET.body).toEqual(rawData);
+
+    console.log('hello world', responseFromGET);
+
+    expect(responseFromGET.text).toEqual('hello');
   });
 
   test('invalid id parameter passed', async () => {

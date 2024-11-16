@@ -14,42 +14,7 @@ const {
   deleteFragment,
 } = require('./data');
 
-/**
- * Type 	Valid Conversion Extensions
- * text/plain 	.txt
- * text/markdown 	.md, .html, .txt
- * text/html 	.html, .txt
- * text/csv 	.csv, .txt, .json
- * application/json 	.json, .yaml, .yml, .txt
- * application/yaml 	.yaml, .txt
- * image/png 	.png, .jpg, .webp, .gif, .avif
- * image/jpeg 	.png, .jpg, .webp, .gif, .avif
- * image/webp 	.png, .jpg, .webp, .gif, .avif
- * image/avif 	.png, .jpg, .webp, .gif, .avif
- * image/gif 	.png, .jpg, .webp, .gif, .avif
- */
-const supportedTypes = {
-  'text/plain': {
-    extensions: ['.txt'],
-    contentTypes: ['text/plain'],
-  },
-  'text/markdown': {
-    extensions: ['.md', '.html', '.txt'],
-    contentTypes: ['text/markdown', 'text/html', 'text/plain'],
-  },
-  'text/html': {
-    extensions: ['.html', '.txt'],
-    contentTypes: ['text/html', 'text/plain'],
-  },
-  'text/csv': {
-    extensions: ['.csv', '.txt', '.json'],
-    contentTypes: ['text/csv', 'text/plain', 'application/json'],
-  },
-  'application/json': {
-    extensions: ['.json', '.yaml', '.yml', '.txt'],
-    contentTypes: ['application/json', 'application/yaml', 'plain/text'],
-  },
-};
+const { validConversions } = require('./conversions');
 
 class Fragment {
   constructor({
@@ -172,7 +137,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return supportedTypes[this.mimeType].contentTypes ?? [];
+    return validConversions[this.mimeType].contentTypes ?? [];
   }
 
   /**
@@ -182,9 +147,8 @@ class Fragment {
    */
   static isSupportedType(value) {
     const { type } = contentType.parse(value);
-    return type in supportedTypes;
+    return type in validConversions;
   }
 }
 
 module.exports.Fragment = Fragment;
-module.exports.supportedTypes = supportedTypes;

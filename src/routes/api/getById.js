@@ -1,6 +1,6 @@
-const md = require('markdown-it')();
 const logger = require('../../logger');
-const { Fragment, supportedTypes } = require('../../model/fragment');
+const { Fragment } = require('../../model/fragment');
+const { convertBuffer, extToContentType } = require('../../model/conversions');
 const { createErrorResponse } = require('../../response');
 
 /**
@@ -17,17 +17,15 @@ module.exports = async (req, res) => {
     `Incoming request: GET /v1/fragments/:id`
   );
 
-  let foundFragment;
-  let foundFragmentData;
+  let targetExtension;
   let id = req.params.id;
-  let fileExtension;
 
-  const fileConversionRequested = /\.[a-zA-Z0-9]+$/.test(id);
-
-  if (fileConversionRequested) {
-    fileExtension = id.slice(id.lastIndexOf('.'));
+  if (/\.[a-zA-Z0-9]+$/.test(id)) {
+    targetExtension = id.slice(id.lastIndexOf('.'));
     id = id.slice(0, id.lastIndexOf('.'));
   }
+
+  let foundFragment;
 
   try {
     foundFragment = await Fragment.byId(req.user, id);
@@ -51,6 +49,8 @@ module.exports = async (req, res) => {
     `Retrieved fragment by id`
   );
 
+  let foundFragmentData;
+
   try {
     foundFragmentData = await foundFragment.getData();
   } catch (error) {
@@ -67,20 +67,27 @@ module.exports = async (req, res) => {
     `Retrieved fragment data by id`
   );
 
-  if (fileConversionRequested) {
-    const mimeTypeEntry = supportedTypes[foundFragment.mimeType];
-    const matchingExtension = mimeTypeEntry.extensions.find((ext) => fileExtension === ext);
+  let result;
+  try {
+    result = convertBuffer(foundFragmentData, foundFragment.mimeType, targetExtension);
+  } catch (error) {
+    logger.error({ message: error.message }, `Error converting fragment data to requested type`);
 
-    if (typeof matchingExtension == 'undefined') {
-      return res
-        .status(415)
-        .json(createErrorResponse(415, 'Unsupported extension for file type conversion'));
-    }
+    const statusCode = error.name == 'UnsupportedMediaTypeError' ? 415 : 500;
 
-    if (foundFragment.mimeType == 'text/markdown' && matchingExtension == '.html') {
-      foundFragmentData = md.render(foundFragmentData.toString());
-    }
+    return res
+      .status(statusCode)
+      .json(
+        createErrorResponse(
+          statusCode,
+          statusCode == 415 ? error.message : `Error getting fragment by id`
+        )
+      );
   }
 
-  return res.status(200).send(foundFragmentData);
+  res.set(
+    'Content-Type',
+    targetExtension ? extToContentType[targetExtension] : foundFragment.mimeType
+  );
+  return res.status(200).send(result);
 };
