@@ -22,7 +22,7 @@ describe('POST /v1/fragments', () => {
         .type('text/plain')
         .send(rawData);
 
-      const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
+      const expectedLocationURL = `${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
       expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
@@ -46,7 +46,7 @@ describe('POST /v1/fragments', () => {
       .type('application/json')
       .send(jsonData);
 
-    const expectedLocationURL = `https://${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
+    const expectedLocationURL = `${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
     expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe('ok');
     expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));

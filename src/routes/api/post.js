@@ -51,7 +51,7 @@ module.exports = async (req, res) => {
   }
   const locationURL = new URL(
     `/v1/fragments/${newFragment.id}`,
-    `https://${process.env?.API_URL || req.headers?.host}`
+    process.env?.API_URL || `https://${req.headers?.host}`
   );
   logger.debug({ locationURL }, `Constructed URL for new fragment`);
   return res
