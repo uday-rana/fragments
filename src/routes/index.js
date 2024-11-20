@@ -1,3 +1,5 @@
+const { hostname } = require('node:os');
+
 const express = require('express');
 
 // version and author from package.json
@@ -30,6 +32,7 @@ router.get('/', (req, res) => {
       author,
       githubUrl: 'https://github.com/uday-rana/fragments',
       version,
+      hostname: hostname(),
     })
   );
 });
