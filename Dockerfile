@@ -75,7 +75,7 @@ COPY --from=installation_stage --chown=node:node /app/node_modules ./node_module
 COPY --chown=node:node ./src ./src
 
 # Switch to the least-privileged user
-USER node
+# USER node
 
 # Start the container by running our server
 CMD ["node", "src/index.js"]
