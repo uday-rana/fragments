@@ -67,6 +67,8 @@ module.exports = async (req, res) => {
     `Retrieved fragment data by id`
   );
 
+  logger.debug({ foundFragmentData }, 'Found fragment data');
+
   let result;
   try {
     result = convertBuffer(foundFragmentData, foundFragment.mimeType, targetExtension);
