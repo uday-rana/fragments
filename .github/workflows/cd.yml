@@ -88,11 +88,12 @@ jobs:
           # for any values that should not be checked into git directly.  Here are
           # a few to get you started, but you should fill in the rest yourself.
           environment-variables: |
-            LOG_LEVEL=debug
+            LOG_LEVEL=info
             NODE_ENV=production
-            AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }}
-            AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }}
-            API_URL=${{ secrets.AWS_LOAD_BALANCER_URL }}
+            AWS_S3_BUCKET_NAME=${{ vars.AWS_S3_BUCKET_NAME }}
+            AWS_COGNITO_POOL_ID=${{ vars.AWS_COGNITO_POOL_ID }}
+            AWS_COGNITO_CLIENT_ID=${{ vars.AWS_COGNITO_CLIENT_ID }}
+            API_URL=${{ vars.AWS_LOAD_BALANCER_URL }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
