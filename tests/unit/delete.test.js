@@ -43,4 +43,12 @@ describe('DELETE /v1/fragments', () => {
 
     expect(responseFromGET2.statusCode).toBe(404);
   });
+
+  test('should return 404 for invalid id', async () => {
+    const responseFromDELETE = await request(app)
+      .delete(`/v1/fragments/notARealFragment`)
+      .auth('user1@email.com', 'password1');
+
+    expect(responseFromDELETE.statusCode).toBe(404);
+  });
 });
