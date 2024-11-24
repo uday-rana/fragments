@@ -90,8 +90,8 @@ jobs:
           environment-variables: |
             LOG_LEVEL=debug
             NODE_ENV=production
-            ${{ env.AWS_COGNITO_POOL_ID }}
-            ${{ env.AWS_COGNITO_CLIENT_ID }}
+            AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }}
+            AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
