@@ -32,6 +32,7 @@ services:
     # Ports to publish
     ports:
       - '8080:8080'
+
   dynamodb-local:
     image: amazon/dynamodb-local
     ports:
@@ -45,6 +46,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-test}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-test}
+
   # LocalStack for S3, see https://docs.localstack.cloud/get-started/#docker-compose
   # Interact via awscli-local, see https://docs.localstack.cloud/integrations/aws-cli/#installation
   localstack:
