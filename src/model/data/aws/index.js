@@ -11,7 +11,7 @@ const metadata = new MemoryDB();
 // chunks of data until finished, then assembling them together.
 // We wrap the whole thing in a Promise so it's easier to consume.
 function streamToBuffer(stream) {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     // As the data streams in, we'll collect it into an array.
     const chunks = [];
 
