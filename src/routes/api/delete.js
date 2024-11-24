@@ -24,9 +24,7 @@ module.exports = async (req, res) => {
 
     logger.error({ error }, defaultMessage);
 
-    return res
-      .status(statusCode)
-      .json(createErrorResponse(statusCode, statusCode == 404 ? error.message : defaultMessage));
+    return res.status(statusCode).json(createErrorResponse(statusCode, defaultMessage));
   }
 
   logger.info({ fragmentId: req.params.id }, `Deleted fragment`);

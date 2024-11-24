@@ -77,9 +77,11 @@ class MemoryDB {
 
     // Throw if trying to delete a key that doesn't exist
     if (!(await this.get(primaryKey, secondaryKey))) {
-      throw new Error(
+      let err = new Error(
         `missing entry for primaryKey=${primaryKey} and secondaryKey=${secondaryKey}`
       );
+      err.name = 'NoSuchKey';
+      throw err;
     }
 
     const db = this.db;
