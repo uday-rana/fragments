@@ -23,6 +23,7 @@ describe('POST /v1/fragments', () => {
         .send(rawData);
 
       const expectedLocationURL = `${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
+
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
       expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
@@ -47,6 +48,7 @@ describe('POST /v1/fragments', () => {
       .send(jsonData);
 
     const expectedLocationURL = `${process.env?.API_URL}/v1/fragments/${res.body.fragment.id}`;
+
     expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe('ok');
     expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
@@ -59,11 +61,13 @@ describe('POST /v1/fragments', () => {
   describe('erroneous data in request body', () => {
     test('non-buffer data sent in request body returns status 415', async () => {
       const rawData = 'hello';
+
       const res = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .type('plain/text')
         .send(rawData);
+
       expect(res.statusCode).toBe(415);
     });
 
@@ -72,6 +76,7 @@ describe('POST /v1/fragments', () => {
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .type('plain/text');
+
       expect(res.statusCode).toBe(415);
     });
   });
@@ -79,20 +84,24 @@ describe('POST /v1/fragments', () => {
   describe('erroneous content-type header in request', () => {
     test('unsupported content-type set in request header returns status 415', async () => {
       const rawData = Buffer.from('hello');
+
       const res = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .type('hmmm')
         .send(rawData);
+
       expect(res.statusCode).toBe(415);
     });
 
     test('content-type not set in request header returns status 415', async () => {
       const rawData = Buffer.from('hello');
+
       const res = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .send(rawData);
+
       expect(res.statusCode).toBe(415);
     });
   });

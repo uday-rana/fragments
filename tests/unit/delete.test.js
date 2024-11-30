@@ -37,6 +37,7 @@ describe('DELETE /v1/fragments', () => {
       .get(`/v1/fragments/${responseFromPOST.body.fragment.id}/info`)
       .auth('user1@email.com', 'password1');
 
+    expect(responseFromGET.body.status).toBe('ok');
     expect(responseFromGET.body.fragment).toEqual(responseFromPOST.body.fragment);
 
     expect(responseFromDELETE.statusCode).toBe(200);
@@ -49,6 +50,7 @@ describe('DELETE /v1/fragments', () => {
       .delete(`/v1/fragments/notARealFragment`)
       .auth('user1@email.com', 'password1');
 
+    expect(responseFromDELETE.body.status).toBe('error');
     expect(responseFromDELETE.statusCode).toBe(404);
   });
 });

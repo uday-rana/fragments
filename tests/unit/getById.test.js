@@ -16,6 +16,7 @@ describe('GET /v1/fragments/:id', () => {
 
   test('data returned matches data sent to POST', async () => {
     const rawData = Buffer.from('hello');
+
     const responseFromPOST = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
@@ -26,8 +27,6 @@ describe('GET /v1/fragments/:id', () => {
       .get(`/v1/fragments/${responseFromPOST.body.fragment.id}`)
       .auth('user1@email.com', 'password1');
 
-    console.log('hello world', responseFromGET);
-
     expect(responseFromGET.text).toEqual('hello');
   });
 
@@ -35,6 +34,7 @@ describe('GET /v1/fragments/:id', () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId`)
       .auth('user1@email.com', 'password1');
+
     expect(res.statusCode).toBe(404);
   });
 
