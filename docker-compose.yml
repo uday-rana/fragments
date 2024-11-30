@@ -1,6 +1,7 @@
 services:
   # Fragments microservice API server
   fragments:
+    container_name: fragments
     # Use a proper init process (tini)
     init: true
     # Build the Docker Image using the Dockerfile
@@ -34,6 +35,7 @@ services:
       - '8080:8080'
 
   dynamodb-local:
+    container_name: dynamodb-local
     image: amazon/dynamodb-local
     ports:
       # Default port is 8000
@@ -48,8 +50,9 @@ services:
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-test}
 
   # LocalStack for S3, see https://docs.localstack.cloud/get-started/#docker-compose
-  # Interact via awscli-local, see https://docs.localstack.cloud/integrations/aws-cli/#installation
+  # Interact via awscli-local, see https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal
   localstack:
+    container_name: localstack
     # https://hub.docker.com/r/localstack/localstack
     image: localstack/localstack
     ports:
