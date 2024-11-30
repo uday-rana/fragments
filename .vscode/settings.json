@@ -11,5 +11,15 @@
     "overrideConfigFile": "./eslint.config.mjs"
   },
   "files.eol": "\n",
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "cSpell.words": [
+    "awscli",
+    "dbaeumer",
+    "devcontainers",
+    "localstack",
+    "orangeopensource",
+    "tini",
+    "unmarshall",
+    "unmarshalling"
+  ]
 }
