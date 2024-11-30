@@ -60,7 +60,6 @@ async function readFragment(ownerId, id) {
     // Wait for the data to come back from AWS
     const data = await ddbDocClient.send(command);
 
-    logger.debug({ data }, `retreived fragment from DynamoDB`);
     // We may or may not get back any data (e.g., no item found for the given key).
     // If we get back an item (fragment), we'll return it.  Otherwise we'll return `undefined`.
     return data?.Item;
@@ -90,7 +89,7 @@ async function writeFragmentData(ownerId, id, data) {
   } catch (err) {
     // If anything goes wrong, log enough info that we can debug
     const { Bucket, Key } = params;
-    logger.error({ err, Bucket, Key }, 'Error uploading fragment data to S3');
+    logger.warn({ err, Bucket, Key }, 'error uploading fragment data to S3');
     throw err;
   }
 }
@@ -115,7 +114,7 @@ async function readFragmentData(ownerId, id) {
     return streamToBuffer(data.Body);
   } catch (err) {
     const { Bucket, Key } = params;
-    logger.error({ err, Bucket, Key }, 'Error streaming fragment data from S3');
+    logger.warn({ err, Bucket, Key }, 'error streaming fragment data from S3');
     throw err;
   }
 }
@@ -154,7 +153,7 @@ async function listFragments(ownerId, expand = false) {
     // [ "b9e7a264-630f-436d-a785-27f30233faea", "dad25b07-8cd6-498b-9aaf-46d358ea97fe", ... ]
     return !expand ? data?.Items.map((item) => item.id) : data?.Items;
   } catch (err) {
-    logger.error({ err, params }, 'error getting all fragments for user from DynamoDB');
+    logger.warn({ err, params }, 'error getting all fragments for user from DynamoDB');
     throw err;
   }
 }
@@ -193,7 +192,7 @@ function deleteFragment(ownerId, id) {
         await s3Client.send(command);
       } catch (err) {
         const { Bucket, Key } = params;
-        logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
+        logger.warn({ err, Bucket, Key }, 'error deleting fragment data from S3');
 
         throw err;
       }

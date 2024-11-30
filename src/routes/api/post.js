@@ -1,11 +1,11 @@
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
-const { createSuccessResponse, createErrorResponse } = require('../../response');
+const { createSuccessResponse } = require('../../response');
 
 /**
  * Creates a new fragment for the current user (i.e., authenticated user)
  */
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   logger.debug(
     {
       user: req.user,
@@ -15,12 +15,18 @@ module.exports = async (req, res) => {
       },
       body: req.body,
     },
-    `Incoming request: POST /v1/fragments`
+    `incoming request: POST /v1/fragments`
   );
 
   // Handle invalid/unsupported content-type headers and/or malformed request body
   if (!Buffer.isBuffer(req.body)) {
-    return res.status(415).json(createErrorResponse(415, 'Unsupported media type'));
+    const err = new Error('Unsupported media type');
+    err.status = 415;
+    logger.warn(
+      { error: err },
+      'invalid/unsupported content-type headers and/or malformed request body'
+    );
+    return next(err);
   }
 
   const newFragment = new Fragment({
@@ -38,10 +44,8 @@ module.exports = async (req, res) => {
       `Created new fragment`
     );
   } catch (error) {
-    logger.error({ error }, `Error creating new fragment`);
-
-    // Since input errors are handled above, any error at this point can only be a server error
-    return res.status(500).json(createErrorResponse(500, `Error creating new fragment`));
+    logger.warn({ error }, `error creating new fragment`);
+    return next(error);
   }
 
   try {
@@ -53,8 +57,8 @@ module.exports = async (req, res) => {
       `Saved data for new fragment`
     );
   } catch (error) {
-    logger.error({ error }), `Error saving data for new fragment`;
-    return res.status(500).json(createErrorResponse(500, `Error saving data for new fragment`));
+    logger.warn({ error }), `error saving data for new fragment`;
+    return next(error);
   }
 
   const locationURL = new URL(
@@ -62,7 +66,7 @@ module.exports = async (req, res) => {
     process.env?.API_URL || `https://${req.headers?.host}`
   );
 
-  logger.debug({ locationURL }, `Constructed URL for new fragment`);
+  logger.debug({ locationURL }, `constructed URL for new fragment`);
 
   return res
     .status(201)

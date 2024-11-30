@@ -50,7 +50,7 @@ const extToContentType = {
 function convertBuffer(sourceBuffer, sourceType, targetExtension) {
   if (targetExtension && !validConversions[sourceType].extensions.includes(targetExtension)) {
     let err = new Error(`Invalid target extension ${targetExtension} for ${sourceType}`);
-    err.name = 'UnsupportedMediaTypeError';
+    err.status = 415;
     throw err;
   }
 

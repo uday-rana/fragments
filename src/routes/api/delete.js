@@ -1,11 +1,11 @@
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
-const { createSuccessResponse, createErrorResponse } = require('../../response');
+const { createSuccessResponse } = require('../../response');
 
 /**
  * Delete a fragment for the user by the given id
  */
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   logger.debug(
     {
       user: req.user,
@@ -13,21 +13,21 @@ module.exports = async (req, res) => {
         id: req.params.id,
       },
     },
-    `Incoming request: DELETE /v1/fragments/:id`
+    `incoming request: DELETE /v1/fragments/:id`
   );
 
   try {
     await Fragment.delete(req.user, req.params.id);
   } catch (error) {
-    const defaultMessage = `Error deleting fragment`;
-    const statusCode = error.name == 'NoSuchKey' ? 404 : 500;
+    if (error.name == 'NoSuchKey') {
+      error.status = 404;
+    }
+    logger.warn({ error }, 'error deleting fragment');
 
-    logger.error({ error }, defaultMessage);
-
-    return res.status(statusCode).json(createErrorResponse(statusCode, defaultMessage));
+    return next(error);
   }
 
-  logger.info({ fragmentId: req.params.id }, `Deleted fragment`);
+  logger.info({ fragmentId: req.params.id }, `deleted fragment`);
 
   return res.status(200).send(createSuccessResponse());
 };

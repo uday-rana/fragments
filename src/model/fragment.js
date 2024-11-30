@@ -62,12 +62,10 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    // It'd be nice if this supported an expand parameter
-    // for consistency with byUser...
     const fragment = await readFragment(ownerId, id);
     if (typeof fragment === 'undefined') {
       let err = new Error(`fragment id ${id} not found`);
-      err.name = 'NotFoundError';
+      err.status = 404;
       throw err;
     }
     return Promise.resolve(fragment);

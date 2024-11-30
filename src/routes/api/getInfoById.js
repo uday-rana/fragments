@@ -1,11 +1,11 @@
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
-const { createErrorResponse, createSuccessResponse } = require('../../response');
+const { createSuccessResponse } = require('../../response');
 
 /**
  * Get the metadata for a fragment for the user by the given id
  */
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   logger.debug(
     {
       user: req.user,
@@ -13,24 +13,26 @@ module.exports = async (req, res) => {
         id: req.params.id,
       },
     },
-    `Incoming request: GET /v1/fragments/:id/info`
+    `incoming request: GET /v1/fragments/:id/info`
   );
   let foundFragment;
   try {
-    foundFragment = await Fragment.byId(req.user, req.params.id);
+    foundFragment = new Fragment(await Fragment.byId(req.user, req.params.id));
   } catch (error) {
-    const defaultMessage = `Error getting fragment by id`;
-    const statusCode = error.name == 'NotFoundError' ? 404 : 500;
+    logger.warn({ error }, `error getting fragment by id`);
 
-    logger.error({ error }, defaultMessage);
-
-    return res
-      .status(statusCode)
-      .json(createErrorResponse(statusCode, statusCode == 404 ? error.message : defaultMessage));
+    return next(error);
   }
+
   logger.info(
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
-    `Retrieved fragment by id`
+    `retrieved fragment by id`
   );
+
+  logger.debug(
+    { foundFragment, type: typeof foundFragment },
+    'retrieved fragment by id: debug info'
+  );
+
   return res.status(200).send(createSuccessResponse({ fragment: foundFragment }));
 };
