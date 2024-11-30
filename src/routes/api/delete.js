@@ -23,7 +23,6 @@ module.exports = async (req, res, next) => {
       error.status = 404;
     }
     logger.warn({ error }, 'error deleting fragment');
-
     return next(error);
   }
 

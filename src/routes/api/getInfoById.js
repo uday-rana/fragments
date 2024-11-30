@@ -15,12 +15,12 @@ module.exports = async (req, res, next) => {
     },
     `incoming request: GET /v1/fragments/:id/info`
   );
+
   let foundFragment;
   try {
     foundFragment = new Fragment(await Fragment.byId(req.user, req.params.id));
   } catch (error) {
     logger.warn({ error }, `error getting fragment by id`);
-
     return next(error);
   }
 
@@ -28,7 +28,6 @@ module.exports = async (req, res, next) => {
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
     `retrieved fragment by id`
   );
-
   logger.debug(
     { foundFragment, type: typeof foundFragment },
     'retrieved fragment by id: debug info'

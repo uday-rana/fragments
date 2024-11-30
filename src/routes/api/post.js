@@ -22,10 +22,12 @@ module.exports = async (req, res, next) => {
   if (!Buffer.isBuffer(req.body)) {
     const err = new Error('Unsupported media type');
     err.status = 415;
+
     logger.warn(
       { error: err },
       'invalid/unsupported content-type headers and/or malformed request body'
     );
+
     return next(err);
   }
 
@@ -38,28 +40,25 @@ module.exports = async (req, res, next) => {
   try {
     // Save the fragment's metadata to the database
     await newFragment.save();
-
-    logger.info(
-      { userId: newFragment.ownerId, fragmentId: newFragment.id },
-      `Created new fragment`
-    );
   } catch (error) {
     logger.warn({ error }, `error creating new fragment`);
     return next(error);
   }
 
+  logger.info({ ownerId: newFragment.ownerId, fragmentId: newFragment.id }, `created new fragment`);
+
   try {
     // Save the fragment's data to the database
     await newFragment.setData(req.body);
-
-    logger.info(
-      { userId: newFragment.ownerId, fragmentId: newFragment.id },
-      `Saved data for new fragment`
-    );
   } catch (error) {
     logger.warn({ error }), `error saving data for new fragment`;
     return next(error);
   }
+
+  logger.info(
+    { userId: newFragment.ownerId, fragmentId: newFragment.id },
+    `Saved data for new fragment`
+  );
 
   const locationURL = new URL(
     `/v1/fragments/${newFragment.id}`,

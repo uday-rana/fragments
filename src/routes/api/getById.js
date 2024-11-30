@@ -25,12 +25,10 @@ module.exports = async (req, res, next) => {
   }
 
   let foundFragment;
-
   try {
     foundFragment = new Fragment(await Fragment.byId(req.user, id));
   } catch (error) {
     logger.warn({ error }, `error getting fragment by id`);
-
     return next(error);
   }
 
@@ -38,19 +36,16 @@ module.exports = async (req, res, next) => {
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
     `retrieved fragment by id`
   );
-
   logger.debug(
     { foundFragment, type: typeof foundFragment },
     'retrieved fragment by id: debug info'
   );
 
   let foundFragmentData;
-
   try {
     foundFragmentData = await foundFragment.getData();
   } catch (error) {
     logger.warn({ error }, `error getting data for requested fragment`);
-
     return next(error);
   }
 
@@ -58,7 +53,6 @@ module.exports = async (req, res, next) => {
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
     `retrieved fragment data by id`
   );
-
   logger.debug(
     { foundFragmentData, type: typeof foundFragmentData },
     'retrieved fragment data by id: debug info'
@@ -69,7 +63,6 @@ module.exports = async (req, res, next) => {
     result = convertBuffer(foundFragmentData, foundFragment.mimeType, targetExtension);
   } catch (error) {
     logger.warn({ error }, `error converting fragment data to requested type`);
-
     return next(error);
   }
 
