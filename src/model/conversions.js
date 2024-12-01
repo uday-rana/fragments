@@ -56,14 +56,6 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
 
   switch (sourceType) {
     case 'text/plain':
-      console.log(
-        'sourceBuffer',
-        sourceBuffer,
-        'sourceType',
-        sourceType,
-        'targetExtension',
-        targetExtension
-      );
       return sourceBuffer.toString();
     case 'text/markdown':
       if (!targetExtension || targetExtension == '.md' || targetExtension == '.txt') {

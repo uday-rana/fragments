@@ -37,7 +37,7 @@ module.exports = async (req, res, next) => {
     `retrieved fragment by id`
   );
   logger.debug(
-    { foundFragment, type: typeof foundFragment },
+    { foundFragment, type: typeof foundFragment, mimeType: foundFragment.mimeType },
     'retrieved fragment by id: debug info'
   );
 
@@ -57,6 +57,10 @@ module.exports = async (req, res, next) => {
     { foundFragmentData, type: typeof foundFragmentData },
     'retrieved fragment data by id: debug info'
   );
+
+  if (targetExtension) {
+    logger.info({ targetExtension }, 'fragment type conversion requested');
+  }
 
   let result;
   try {

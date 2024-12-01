@@ -57,7 +57,7 @@ module.exports = async (req, res, next) => {
 
   logger.info(
     { userId: newFragment.ownerId, fragmentId: newFragment.id },
-    `Saved data for new fragment`
+    `saved data for new fragment`
   );
 
   const locationURL = new URL(
