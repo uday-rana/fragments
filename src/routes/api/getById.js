@@ -70,9 +70,6 @@ module.exports = async (req, res, next) => {
     return next(error);
   }
 
-  res.set(
-    'Content-Type',
-    targetExtension ? extToContentType[targetExtension] : foundFragment.mimeType
-  );
+  res.set('Content-Type', targetExtension ? extToContentType[targetExtension] : foundFragment.type);
   return res.status(200).send(result);
 };
