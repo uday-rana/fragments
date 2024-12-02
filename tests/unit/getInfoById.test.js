@@ -1,9 +1,20 @@
 const request = require('supertest');
 
 const app = require('../../src/app');
-const { clear } = require('../../src/model/data/memory');
+const hash = require('../../src/hash');
+const { writeFragment, writeFragmentData, clear } = require('../../src/model/data/memory');
 
 describe('GET /fragments/:id/info', () => {
+  const testFragmentData = Buffer.from('hello');
+  const testFragment = {
+    ownerId: hash('user1@email.com'),
+    id: 'a',
+    type: 'text/plain',
+    created: new Date().toISOString(),
+    updated: new Date().toISOString(),
+    size: 5,
+  };
+
   // Clear the in-memory databases before each test
   beforeEach(() => {
     clear();
@@ -20,28 +31,23 @@ describe('GET /fragments/:id/info', () => {
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  test('data returned matches data sent to POST', async () => {
-    const rawData = Buffer.from('hello');
-
-    const responseFromPOST = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .type('text/plain')
-      .send(rawData);
-
-    const responseFromGET = await request(app)
-      .get(`/v1/fragments/${responseFromPOST.body.fragment.id}/info`)
-      .auth('user1@email.com', 'password1');
-
-    expect(responseFromGET.body.status).toBe('ok');
-    expect(responseFromGET.body.fragment).toEqual(responseFromPOST.body.fragment);
-  });
-
   test('invalid id parameter passed', async () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId/info`)
       .auth('user1@email.com', 'password1');
 
     expect(res.statusCode).toBe(404);
+  });
+
+  test('data returned matches data sent to POST', async () => {
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
+
+    const response = await request(app)
+      .get(`/v1/fragments/${testFragment.id}/info`)
+      .auth('user1@email.com', 'password1');
+
+    expect(response.body.status).toBe('ok');
+    expect(response.body.fragment).toEqual(testFragment);
   });
 });

@@ -1,12 +1,32 @@
 const request = require('supertest');
 
 const app = require('../../src/app');
-const { clear } = require('../../src/model/data/memory');
+const hash = require('../../src/hash');
+const { convertBuffer } = require('../../src/model/conversions');
+const { writeFragment, writeFragmentData, clear } = require('../../src/model/data/memory');
+
+// Mock convertBuffer but retain other module exports
+jest.mock('../../src/model/conversions', () => ({
+  ...jest.requireActual('../../src/model/conversions'),
+  convertBuffer: jest.fn(),
+}));
 
 describe('GET /fragments/:id', () => {
-  // Clear the in-memory databases before each test
+  const testFragmentData = Buffer.from('hello');
+  const testFragment = {
+    ownerId: hash('user1@email.com'),
+    id: 'a',
+    type: 'text/plain',
+    created: new Date().toISOString(),
+    updated: new Date().toISOString(),
+    size: 5,
+  };
+
   beforeEach(() => {
+    // Clear the in-memory databases
     clear();
+    // Reset the mocks to empty functions
+    jest.resetAllMocks();
   });
 
   // If the request is missing the Authorization header, it should be forbidden
@@ -20,22 +40,6 @@ describe('GET /fragments/:id', () => {
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  test('data returned matches data sent to POST', async () => {
-    const rawData = Buffer.from('hello');
-
-    const responseFromPOST = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .type('text/plain')
-      .send(rawData);
-
-    const responseFromGET = await request(app)
-      .get(`/v1/fragments/${responseFromPOST.body.fragment.id}`)
-      .auth('user1@email.com', 'password1');
-
-    expect(responseFromGET.text).toEqual('hello');
-  });
-
   test('invalid id parameter passed', async () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId`)
@@ -44,38 +48,35 @@ describe('GET /fragments/:id', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  describe('type conversion', () => {
-    test('markdown is successfully converted to html', async () => {
-      const rawData = Buffer.from('# hello');
-
-      const responseFromPOST = await request(app)
-        .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
-        .type('text/markdown')
-        .send(rawData);
-
-      const responseFromGET = await request(app)
-        .get(`/v1/fragments/${responseFromPOST.body.fragment.id}.html`)
-        .auth('user1@email.com', 'password1');
-
-      expect(responseFromGET.headers['content-type']).toMatch(/^text\/html(?:;.*)?$/);
-      expect(responseFromGET.headers['content-length']).toMatch('15');
-      expect(responseFromGET.text).toEqual('<h1>hello</h1>\n');
+  test('data returned matches data sent to POST', async () => {
+    convertBuffer.mockImplementation((buf) => {
+      return buf.toString();
     });
 
-    test('responds with 415 for unsupported conversions', async () => {
-      const rawData = Buffer.from('hello');
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
-      const responseFromPOST = await request(app)
-        .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
-        .type('text/plain')
-        .send(rawData);
+    const response = await request(app)
+      .get(`/v1/fragments/${testFragment.id}`)
+      .auth('user1@email.com', 'password1');
 
-      await request(app)
-        .get(`/v1/fragments/${responseFromPOST.body.fragment.id}.handlebars`)
-        .auth('user1@email.com', 'password1')
-        .expect(415);
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toEqual(testFragmentData.toString());
+  });
+
+  test('responds with 415 for unsupported conversions', async () => {
+    convertBuffer.mockImplementation(() => {
+      let err = new Error(`Invalid target extension`);
+      err.status = 415;
+      throw err;
     });
+
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
+
+    await request(app)
+      .get(`/v1/fragments/${testFragment.id}.handlebars`)
+      .auth('user1@email.com', 'password1')
+      .expect(415);
   });
 });

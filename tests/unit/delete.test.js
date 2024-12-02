@@ -1,9 +1,25 @@
 const request = require('supertest');
 
 const app = require('../../src/app');
-const { clear } = require('../../src/model/data/memory');
+const hash = require('../../src/hash');
+const {
+  writeFragment,
+  writeFragmentData,
+  clear,
+  listFragments,
+} = require('../../src/model/data/memory');
 
 describe('DELETE /fragments', () => {
+  const testFragmentData = Buffer.from('hello');
+  const testFragment = {
+    ownerId: hash('user1@email.com'),
+    id: 'a',
+    type: 'text/plain',
+    created: new Date().toISOString(),
+    updated: new Date().toISOString(),
+    size: 5,
+  };
+
   // Clear the in-memory databases before each test
   beforeEach(() => {
     clear();
@@ -20,43 +36,26 @@ describe('DELETE /fragments', () => {
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  test('fragment is successfully deleted', async () => {
-    const rawData = Buffer.from('hello');
-
-    const responseFromPOST = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .type('text/plain')
-      .send(rawData);
-
-    const createdFragmentId = responseFromPOST.body.fragment.id;
-
-    const responseFromGET = await request(app)
-      .get(`/v1/fragments/${createdFragmentId}/info`)
-      .auth('user1@email.com', 'password1');
-
-    const responseFromDELETE = await request(app)
-      .delete(`/v1/fragments/${createdFragmentId}`)
-      .auth('user1@email.com', 'password1');
-
-    const responseFromGET2 = await request(app)
-      .get(`/v1/fragments/${responseFromPOST.body.fragment.id}/info`)
-      .auth('user1@email.com', 'password1');
-
-    expect(responseFromGET.body.status).toBe('ok');
-    expect(responseFromGET.body.fragment).toEqual(responseFromPOST.body.fragment);
-
-    expect(responseFromDELETE.statusCode).toBe(200);
-
-    expect(responseFromGET2.statusCode).toBe(404);
-  });
-
   test('should return 404 for invalid id', async () => {
-    const responseFromDELETE = await request(app)
+    const response = await request(app)
       .delete(`/v1/fragments/notARealFragment`)
       .auth('user1@email.com', 'password1');
 
-    expect(responseFromDELETE.body.status).toBe('error');
-    expect(responseFromDELETE.statusCode).toBe(404);
+    expect(response.body.status).toBe('error');
+    expect(response.statusCode).toBe(404);
+  });
+
+  test('fragment is successfully deleted', async () => {
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
+
+    const response = await request(app)
+      .delete(`/v1/fragments/${testFragment.id}`)
+      .auth('user1@email.com', 'password1');
+
+    const result = await listFragments(testFragment.ownerId);
+
+    expect(response.statusCode).toBe(200);
+    expect(result).not.toContain(testFragment.id);
   });
 });

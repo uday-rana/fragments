@@ -1,9 +1,20 @@
 const request = require('supertest');
 
 const app = require('../../src/app');
-const { clear } = require('../../src/model/data/memory');
+const hash = require('../../src/hash');
+const { writeFragment, writeFragmentData, clear } = require('../../src/model/data/memory');
 
 describe('GET /fragments', () => {
+  const testFragmentData = Buffer.from('hello');
+  const testFragment = {
+    ownerId: hash('user1@email.com'),
+    id: 'a',
+    type: 'text/plain',
+    created: new Date().toISOString(),
+    updated: new Date().toISOString(),
+    size: 5,
+  };
+
   // Clear the in-memory databases before each test
   beforeEach(() => {
     clear();
@@ -24,60 +35,37 @@ describe('GET /fragments', () => {
     expect(Array.isArray(res.body.fragments)).toBe(true);
   });
 
-  test('data returned contains data sent to POST', async () => {
-    const rawData = Buffer.from('hello');
+  test("should return array of user's fragment ids from db", async () => {
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
-    const responseFromPOST = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .type('text/plain')
-      .send(rawData);
+    const response = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
 
-    const responseFromGET = await request(app)
-      .get('/v1/fragments')
-      .auth('user1@email.com', 'password1');
-
-    expect(responseFromGET.body.status).toBe('ok');
-    expect(responseFromGET.body.fragments).toEqual(
-      expect.arrayContaining([responseFromPOST.body.fragment.id])
-    );
+    expect(response.body.status).toBe('ok');
+    expect(response.body.fragments).toEqual(expect.arrayContaining([testFragment.id]));
   });
 
   test('expanded data returned matches data sent to POST', async () => {
-    const rawData = Buffer.from('hello');
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
-    const responseFromPOST = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .type('text/plain')
-      .send(rawData);
-
-    const responseFromGET = await request(app)
+    const response = await request(app)
       .get('/v1/fragments?expand=1')
       .auth('user1@email.com', 'password1');
 
-    expect(responseFromGET.body.status).toBe('ok');
-    expect(responseFromGET.body.fragments).toEqual(
-      expect.arrayContaining([responseFromPOST.body.fragment])
-    );
+    expect(response.body.status).toBe('ok');
+    expect(response.body.fragments).toEqual(expect.arrayContaining([testFragment]));
   });
 
   test('"expand" query parameter passed unsupported value returns unexpanded data', async () => {
-    const rawData = Buffer.from('hello');
+    await writeFragment(testFragment);
+    await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
-    const responseFromPOST = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .type('text/plain')
-      .send(rawData);
-
-    const responseFromGET = await request(app)
+    const response = await request(app)
       .get('/v1/fragments?expand=maybe')
       .auth('user1@email.com', 'password1');
 
-    expect(responseFromGET.body.status).toBe('ok');
-    expect(responseFromGET.body.fragments).toEqual(
-      expect.arrayContaining([responseFromPOST.body.fragment.id])
-    );
+    expect(response.body.status).toBe('ok');
+    expect(response.body.fragments).toEqual(expect.arrayContaining([testFragment.id]));
   });
 });
