@@ -1,8 +1,14 @@
 const request = require('supertest');
 
 const app = require('../../src/app');
+const { clear } = require('../../src/model/data/memory');
 
 describe('GET /fragments/:id', () => {
+  // Clear the in-memory databases before each test
+  beforeEach(() => {
+    clear();
+  });
+
   // If the request is missing the Authorization header, it should be forbidden
   test('unauthenticated requests are denied', () =>
     request(app).get('/v1/fragments/someId').expect(401));
