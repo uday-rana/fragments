@@ -2,7 +2,7 @@ const request = require('supertest');
 
 const app = require('../../src/app');
 
-describe('GET /v1/fragments/:id/info', () => {
+describe('GET /fragments/:id/info', () => {
   // If the request is missing the Authorization header, it should be forbidden
   test('unauthenticated requests are denied', () =>
     request(app).get('/v1/fragments/someId/info').expect(401));

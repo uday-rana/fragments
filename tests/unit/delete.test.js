@@ -2,7 +2,7 @@ const request = require('supertest');
 
 const app = require('../../src/app');
 
-describe('DELETE /v1/fragments', () => {
+describe('DELETE /fragments', () => {
   // If the request is missing the Authorization header, it should be forbidden
   test('unauthenticated requests are denied', () =>
     request(app).delete('/v1/fragments').expect(401));

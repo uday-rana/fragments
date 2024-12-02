@@ -7,7 +7,7 @@ const hash = require('../../src/hash');
 // if it isn't long enough for your test runs. Returns a Promise.
 const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe('POST /v1/fragments', () => {
+describe('POST /fragments', () => {
   describe('happy path', () => {
     test('authenticated users posting raw binary data of supported text/plain content-type get successful response', async () => {
       const rawData = Buffer.from('hello');
