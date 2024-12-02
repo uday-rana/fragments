@@ -47,9 +47,16 @@ function deleteFragment(ownerId, id) {
   ]);
 }
 
+// Clear all data stored in the in-memory databases
+function clear() {
+  data.clear();
+  metadata.clear();
+}
+
 module.exports.listFragments = listFragments;
 module.exports.writeFragment = writeFragment;
 module.exports.readFragment = readFragment;
 module.exports.writeFragmentData = writeFragmentData;
 module.exports.readFragmentData = readFragmentData;
 module.exports.deleteFragment = deleteFragment;
+module.exports.clear = clear;

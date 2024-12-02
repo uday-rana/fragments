@@ -88,6 +88,14 @@ class MemoryDB {
     delete db[primaryKey][secondaryKey];
     return Promise.resolve();
   }
+
+  /**
+   * Clears all data, effectively resetting the database
+   * @returns {void}
+   */
+  clear() {
+    this.db = {};
+  }
 }
 
 module.exports = MemoryDB;
