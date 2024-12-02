@@ -1,4 +1,5 @@
-# POST a fragment, and GET it's metadata
+# 1. POST a fragment and GET it's metadata
+
 POST http://localhost:8080/v1/fragments
 Content-Type: application/json
 [BasicAuth]
@@ -20,12 +21,13 @@ jsonpath "$.status" == "ok"
 jsonpath "$.fragment" exists
 jsonpath "$.fragment.id" == {{fragment1_id}}
 jsonpath "$.fragment.ownerId" matches /^[a-f0-9]+$/
-jsonpath "$.fragment.type" == "application/json"
-jsonpath "$.fragment.size" == 25
 jsonpath "$.fragment.created" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
 jsonpath "$.fragment.updated" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
+jsonpath "$.fragment.type" == "application/json"
+jsonpath "$.fragment.size" == 25
 
-# POST another fragment and GET it's metadata
+# 2. POST another fragment and GET it's metadata
+
 POST http://localhost:8080/v1/fragments
 Content-Type: text/markdown
 [BasicAuth]
@@ -52,7 +54,7 @@ jsonpath "$.fragment.size" == 22
 jsonpath "$.fragment.created" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
 jsonpath "$.fragment.updated" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
 
-# GET all fragment ids for the user and confirm the ones created above are included
+# 3. GET all fragment ids for the user and confirm those created above are included
 
 GET http://localhost:8080/v1/fragments
 [BasicAuth]
@@ -63,7 +65,7 @@ HTTP/1.1 200
 jsonpath "$.fragments" includes {{fragment1_id}}
 jsonpath "$.fragments" includes {{fragment2_id}}
 
-# DELETE the first fragment and try to get it again
+# 4. DELETE the first fragment and try to get it again
 
 DELETE {{fragment1_url}}
 [BasicAuth]
@@ -77,7 +79,7 @@ user1@email.com:password1
 
 HTTP/1.1 404
 
-# GET all fragment ids for the user and confirm the deleted fragment is not included
+# 5. GET all fragment ids for the user and confirm the deleted fragment's id is not included
 
 GET http://localhost:8080/v1/fragments
 [BasicAuth]
