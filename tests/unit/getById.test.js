@@ -66,7 +66,7 @@ describe('GET /fragments/:id', () => {
     expect(response.text).toEqual(testFragmentData.toString());
   });
 
-  test('should respond with HTTP 415 when unsupported conversion target extension is passed', async () => {
+  test('should respond with HTTP 415 when an unsupported conversion target extension is passed', async () => {
     convertBuffer.mockImplementation(() => {
       let err = new Error(`Invalid target extension`);
       err.status = 415;
