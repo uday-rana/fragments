@@ -21,8 +21,8 @@ module.exports = async (req, res, next) => {
   } catch (error) {
     if (error.name === 'NoSuchKey') {
       error.status = 404;
+      logger.debug({ error }, 'error deleting fragment');
     }
-    logger.warn({ error }, 'error deleting fragment');
     return next(error);
   }
 
