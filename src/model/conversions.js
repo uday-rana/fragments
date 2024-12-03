@@ -54,38 +54,20 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
     throw err;
   }
 
+  // Handle cases where no conversion is required
+  if (
+    !targetExtension ||
+    targetExtension == '.txt' ||
+    sourceType == extToContentType[targetExtension]
+  ) {
+    return sourceBuffer.toString();
+  }
+
+  // Handle conversions
   switch (sourceType) {
-    case 'text/plain':
-      return sourceBuffer.toString();
     case 'text/markdown':
-      if (!targetExtension || targetExtension == '.md' || targetExtension == '.txt') {
-        return sourceBuffer.toString();
-      }
       if (targetExtension == '.html') {
         return md.render(sourceBuffer.toString());
-      }
-      break;
-
-    case 'text/html':
-      if (!targetExtension || targetExtension == '.html' || targetExtension == '.txt') {
-        return sourceBuffer.toString();
-      }
-      break;
-
-    case 'text/csv':
-      if (!targetExtension || targetExtension == '.csv' || targetExtension == '.txt') {
-        return sourceBuffer.toString();
-      }
-      break;
-
-    case 'application/json':
-      if (!targetExtension || targetExtension == '.json') {
-        // Standardize the output by converting it to an object then to JSON
-        return JSON.stringify(JSON.parse(sourceBuffer.toString()));
-      }
-
-      if (targetExtension == '.txt') {
-        return sourceBuffer.toString();
       }
       break;
 

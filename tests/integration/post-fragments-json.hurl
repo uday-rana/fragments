@@ -24,5 +24,7 @@ user1@email.com:password1
 
 HTTP/1.1 200
 Content-Type: application/json; charset=utf-8
-Content-Length: 15
-{"key":"value"}
+Content-Length: 20
+{
+  "key": "value"
+}
