@@ -7,6 +7,8 @@ user1@email.com:password1
 
 # GET it's location
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 url: header "Location"
 

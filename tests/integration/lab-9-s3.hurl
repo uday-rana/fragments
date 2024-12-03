@@ -5,6 +5,8 @@ user1@email.com:password1
 `Hello S3!`
 
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 url: header "Location"
 
@@ -31,3 +33,5 @@ GET {{url}}
 user1@email.com:password1
 
 HTTP/1.1 404
+[Asserts]
+jsonpath "$.status" == "error"

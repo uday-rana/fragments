@@ -5,3 +5,5 @@ user1@email.com:password1
 `Unsupported type`
 
 HTTP/1.1 415
+[Asserts]
+jsonpath "$.status" == "error"

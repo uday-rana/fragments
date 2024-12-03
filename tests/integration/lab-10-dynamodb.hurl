@@ -7,6 +7,8 @@ user1@email.com:password1
 { "service": "DynamoDB" }  
 
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 fragment1_url: header "Location"
 fragment1_id: jsonpath "$.fragment.id"
@@ -36,6 +38,8 @@ user1@email.com:password1
 `DynamoDB is **great**.`
 
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 fragment2_url: header "Location"
 fragment2_id: jsonpath "$.fragment.id"
@@ -63,6 +67,7 @@ user1@email.com:password1
 
 HTTP/1.1 200
 [Asserts]
+jsonpath "$.status" == "ok"
 jsonpath "$.fragments" includes {{fragment1_id}}
 jsonpath "$.fragments" includes {{fragment2_id}}
 
@@ -73,12 +78,16 @@ DELETE {{fragment1_url}}
 user1@email.com:password1
 
 HTTP/1.1 200
+[Asserts]
+jsonpath "$.status" == "ok"
 
 GET {{fragment1_url}}
 [BasicAuth]
 user1@email.com:password1
 
 HTTP/1.1 404
+[Asserts]
+jsonpath "$.status" == "error"
 
 # 5. GET all fragment ids for the user and confirm the deleted fragment's id is not included
 
@@ -88,5 +97,6 @@ user1@email.com:password1
 
 HTTP/1.1 200
 [Asserts]
+jsonpath "$.status" == "ok"
 jsonpath "$.fragments" includes {{fragment2_id}}
 jsonpath "$.fragments" not includes {{fragment1_id}}

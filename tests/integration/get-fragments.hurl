@@ -7,6 +7,8 @@ user1@email.com:password1
 
 # Capture the fragment id from the location url
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 id: header "Location" split "/" nth 5
 

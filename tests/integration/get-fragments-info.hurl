@@ -5,6 +5,8 @@ user1@email.com:password1
 
 # Expect a 404 response
 HTTP/1.1 404
+[Asserts]
+jsonpath "$.status" == "error"
 
 # POST a fragment
 POST http://localhost:8080/v1/fragments
@@ -15,6 +17,8 @@ user1@email.com:password1
 
 # Capture the fragment url and id
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 url: header "Location"
 id: jsonpath "$.fragment.id"

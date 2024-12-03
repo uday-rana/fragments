@@ -13,8 +13,10 @@ Content-Type: text/plain
 user1@email.com:password1
 `This is a fragment!`
 
-# GET it's location
+# Capture it's location
 HTTP/1.1 201
+[Asserts]
+jsonpath "$.status" == "ok"
 [Captures]
 url: header "Location"
 id: jsonpath "$.fragment.id"
