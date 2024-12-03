@@ -9,7 +9,7 @@ const {
   listFragments,
 } = require('../../src/model/data/memory');
 
-describe('DELETE /fragments', () => {
+describe('DELETE /fragments/:id', () => {
   const testUserEmail = 'user1@email.com';
   const testUserPasswd = 'password1';
   const testFragmentData = Buffer.from('hello');
