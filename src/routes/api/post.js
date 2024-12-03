@@ -36,16 +36,6 @@ module.exports = async (req, res, next) => {
   });
 
   try {
-    // Save the fragment's metadata to the database
-    await newFragment.save();
-  } catch (error) {
-    logger.warn({ error }, `error creating new fragment`);
-    return next(error);
-  }
-
-  logger.info({ ownerId: newFragment.ownerId, fragmentId: newFragment.id }, `created new fragment`);
-
-  try {
     // Save the fragment's data to the database
     await newFragment.setData(req.body);
   } catch (error) {
