@@ -1,3 +1,11 @@
+# Try to GET a nonexistent fragment
+GET http://localhost:8080/v1/fragments/notARealFragment/info
+[BasicAuth]
+user1@email.com:password1
+
+# Expect a 404 response
+HTTP/1.1 404
+
 # POST a fragment
 POST http://localhost:8080/v1/fragments
 Content-Type: text/plain
