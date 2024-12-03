@@ -14,7 +14,7 @@ const {
   deleteFragment,
 } = require('./data');
 
-const { validConversions } = require('./conversions');
+const { validConversionTargets } = require('./conversions');
 
 class Fragment {
   constructor({
@@ -135,7 +135,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return validConversions[this.mimeType].contentTypes ?? [];
+    return validConversionTargets[this.mimeType].contentTypes ?? [];
   }
 
   /**
@@ -145,7 +145,7 @@ class Fragment {
    */
   static isSupportedType(value) {
     const { type } = contentType.parse(value);
-    return type in validConversions;
+    return type in validConversionTargets;
   }
 }
 
