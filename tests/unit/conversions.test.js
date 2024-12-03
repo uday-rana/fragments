@@ -61,4 +61,18 @@ describe('Type Conversion', () => {
       expect(convertBuffer(sourceBuffer, 'application/json', '.txt')).toBe(input);
     });
   });
+
+  describe('target extension edge cases', () => {
+    const input = 'hello';
+    const sourceBuffer = Buffer.from(input);
+
+    test('should throw when unsupported target extension is passed', () => {
+      expect(() => {
+        convertBuffer(sourceBuffer, 'text/plain', '.rb');
+      }).toThrow();
+    });
+    test('should return the input as a string when target extension is not passed', () => {
+      expect(convertBuffer(sourceBuffer, 'text/plain')).toBe(input);
+    });
+  });
 });
