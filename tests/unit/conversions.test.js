@@ -44,7 +44,7 @@ describe('Type Conversion', () => {
 "value 1","value 2"
 `;
     const sourceBuffer = Buffer.from(input);
-    const expectedJsonOutput = JSON.stringify([{ key_1: 'value 1', key_2: 'value 2' }]);
+    const expectedJsonOutput = '[{"key_1":"value 1","key_2":"value 2"}]';
 
     test('should convert buffer to csv for .csv target', () => {
       expect(convertBuffer(sourceBuffer, 'text/csv', '.csv')).toBe(input);
@@ -58,7 +58,7 @@ describe('Type Conversion', () => {
   });
 
   describe('conversions from json', () => {
-    const input = JSON.stringify({ value: 'hello' });
+    const input = '{"value":"hello"}\n';
     const sourceBuffer = Buffer.from(input);
 
     test('should convert buffer to json for .json target', () => {
