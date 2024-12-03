@@ -1,4 +1,3 @@
-const md = require('markdown-it')();
 const { convertBuffer } = require('../../src/model/conversions');
 
 describe('Type Conversion', () => {
@@ -14,6 +13,7 @@ describe('Type Conversion', () => {
   describe('conversions from markdown', () => {
     const input = '# hello';
     const sourceBuffer = Buffer.from(input);
+    const expectedHtmlOutput = '<h1>hello</h1>\n';
 
     test('should convert buffer to markdown for .md target', () => {
       expect(convertBuffer(sourceBuffer, 'text/markdown', '.md')).toBe(input);
@@ -22,7 +22,7 @@ describe('Type Conversion', () => {
       expect(convertBuffer(sourceBuffer, 'text/markdown', '.txt')).toBe(input);
     });
     test('should convert buffer to html for .html target', () => {
-      expect(convertBuffer(sourceBuffer, 'text/markdown', '.html')).toBe(md.render(input));
+      expect(convertBuffer(sourceBuffer, 'text/markdown', '.html')).toBe(expectedHtmlOutput);
     });
   });
 
