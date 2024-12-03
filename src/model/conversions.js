@@ -14,7 +14,7 @@ const md = require('markdown-it')();
  * image/avif 	.png, .jpg, .webp, .gif, .avif
  * image/gif 	.png, .jpg, .webp, .gif, .avif
  */
-const validConversions = {
+const validConversionTargets = {
   'text/plain': {
     extensions: ['.txt'],
     contentTypes: ['text/plain'],
@@ -48,7 +48,7 @@ const extToContentType = {
 };
 
 function convertBuffer(sourceBuffer, sourceType, targetExtension) {
-  if (targetExtension && !validConversions[sourceType].extensions.includes(targetExtension)) {
+  if (targetExtension && !validConversionTargets[sourceType].extensions.includes(targetExtension)) {
     let err = new Error(`Invalid target extension ${targetExtension} for ${sourceType}`);
     err.status = 415;
     throw err;
@@ -93,6 +93,6 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
   }
 }
 
-module.exports.validConversions = validConversions;
+module.exports.validConversionTargets = validConversionTargets;
 module.exports.extToContentType = extToContentType;
 module.exports.convertBuffer = convertBuffer;
