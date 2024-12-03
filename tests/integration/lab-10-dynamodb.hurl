@@ -20,6 +20,7 @@ HTTP/1.1 200
 jsonpath "$.status" == "ok"
 jsonpath "$.fragment" exists
 jsonpath "$.fragment.id" == {{fragment1_id}}
+jsonpath "$.fragment.id" matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 jsonpath "$.fragment.ownerId" matches /^[a-f0-9]+$/
 jsonpath "$.fragment.created" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
 jsonpath "$.fragment.updated" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
