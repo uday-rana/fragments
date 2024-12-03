@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
   try {
     await Fragment.delete(req.user, req.params.id);
   } catch (error) {
-    if (error.name == 'NoSuchKey') {
+    if (error.name === 'NoSuchKey') {
       error.status = 404;
     }
     logger.warn({ error }, 'error deleting fragment');

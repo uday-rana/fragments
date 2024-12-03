@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
 
   let foundFragments;
   try {
-    foundFragments = await Fragment.byUser(req.user, req.query.expand == 1);
+    foundFragments = await Fragment.byUser(req.user, req.query.expand === '1');
   } catch (error) {
     logger.warn({ error }, `error getting fragments for user`);
     return next(error);
@@ -27,10 +27,10 @@ module.exports = async (req, res, next) => {
   // Get IDs of all fragments for logging
   // If fragments are expanded, extract IDs
   const foundFragmentsIds =
-    req.query.expand == 1 ? foundFragments.map((fragment) => fragment.id) : foundFragments;
+    req.query.expand === '1' ? foundFragments.map((fragment) => fragment.id) : foundFragments;
 
   logger.info({ user: req.user, fragmentIds: foundFragmentsIds }, `retrieved fragments for user`);
-  if (req.query.expand == 1) {
+  if (req.query.expand === '1') {
     logger.debug({ foundFragments }, 'retrieved fragments for user: debug info');
   }
 
