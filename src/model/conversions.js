@@ -69,6 +69,10 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
       if (targetExtension == '.html') {
         return md.render(sourceBuffer.toString());
       }
+      break;
+
+    default:
+      break;
   }
 }
 
