@@ -8,6 +8,9 @@ const hash = require('../../src/hash');
 const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('POST /fragments', () => {
+  const testUserEmail = 'user1@email.com';
+  const testUserPasswd = 'password1';
+
   describe('unauthorized requests', () => {
     // If the request is missing the Authorization header, it should be forbidden
     test('should deny unauthenticated requests', () =>
@@ -31,7 +34,7 @@ describe('POST /fragments', () => {
 
       const res = await request(app)
         .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
+        .auth(testUserEmail, testUserPasswd)
         .type('text/plain')
         .send(rawData);
 
@@ -39,7 +42,7 @@ describe('POST /fragments', () => {
 
       expect(res.statusCode).toBe(201);
       expect(res.body.status).toBe('ok');
-      expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
+      expect(res.body.fragment.ownerId).toStrictEqual(hash(testUserEmail));
       expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(rawData));
       expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
       expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
@@ -56,7 +59,7 @@ describe('POST /fragments', () => {
 
     const res = await request(app)
       .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
+      .auth(testUserEmail, testUserPasswd)
       .type('application/json')
       .send(jsonData);
 
@@ -64,7 +67,7 @@ describe('POST /fragments', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe('ok');
-    expect(res.body.fragment.ownerId).toStrictEqual(hash('user1@email.com'));
+    expect(res.body.fragment.ownerId).toStrictEqual(hash(testUserEmail));
     expect(res.body.fragment.size).toStrictEqual(Buffer.byteLength(jsonData));
     expect(Date.parse(res.body.fragment.created)).toBeGreaterThan(Date.parse(dateBeforeReq));
     expect(Date.parse(res.body.fragment.updated)).toBeGreaterThan(Date.parse(dateBeforeReq));
@@ -77,7 +80,7 @@ describe('POST /fragments', () => {
 
       const res = await request(app)
         .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
+        .auth(testUserEmail, testUserPasswd)
         .type('plain/text')
         .send(rawData);
 
@@ -87,7 +90,7 @@ describe('POST /fragments', () => {
     test('should respond with HTTP 415 when no data is sent in the request body', async () => {
       const res = await request(app)
         .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
+        .auth(testUserEmail, testUserPasswd)
         .type('plain/text');
 
       expect(res.statusCode).toBe(415);
@@ -100,7 +103,7 @@ describe('POST /fragments', () => {
 
       const res = await request(app)
         .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
+        .auth(testUserEmail, testUserPasswd)
         .type('hmmm')
         .send(rawData);
 
@@ -112,7 +115,7 @@ describe('POST /fragments', () => {
 
       const res = await request(app)
         .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
+        .auth(testUserEmail, testUserPasswd)
         .send(rawData);
 
       expect(res.statusCode).toBe(415);

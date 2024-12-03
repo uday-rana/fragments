@@ -5,9 +5,11 @@ const hash = require('../../src/hash');
 const { writeFragment, writeFragmentData, clear } = require('../../src/model/data/memory');
 
 describe('GET /fragments/:id/info', () => {
+  const testUserEmail = 'user1@email.com';
+  const testUserPasswd = 'password1';
   const testFragmentData = Buffer.from('hello');
   const testFragment = {
-    ownerId: hash('user1@email.com'),
+    ownerId: hash(testUserEmail),
     id: 'a',
     type: 'text/plain',
     created: new Date().toISOString(),
@@ -34,7 +36,7 @@ describe('GET /fragments/:id/info', () => {
   test('should respond with HTTP 404 when an invalid fragment id is passed', async () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId/info`)
-      .auth('user1@email.com', 'password1');
+      .auth(testUserEmail, testUserPasswd);
 
     expect(res.statusCode).toBe(404);
   });
@@ -45,7 +47,7 @@ describe('GET /fragments/:id/info', () => {
 
     const response = await request(app)
       .get(`/v1/fragments/${testFragment.id}/info`)
-      .auth('user1@email.com', 'password1');
+      .auth(testUserEmail, testUserPasswd);
 
     expect(response.statusCode).toBe(200);
     expect(response.body.status).toBe('ok');

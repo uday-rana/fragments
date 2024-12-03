@@ -10,9 +10,11 @@ const {
 } = require('../../src/model/data/memory');
 
 describe('DELETE /fragments', () => {
+  const testUserEmail = 'user1@email.com';
+  const testUserPasswd = 'password1';
   const testFragmentData = Buffer.from('hello');
   const testFragment = {
-    ownerId: hash('user1@email.com'),
+    ownerId: hash(testUserEmail),
     id: 'a',
     type: 'text/plain',
     created: new Date().toISOString(),
@@ -39,7 +41,7 @@ describe('DELETE /fragments', () => {
   test('should respond with HTTP 404 when an invalid fragment id is passed', async () => {
     const response = await request(app)
       .delete(`/v1/fragments/notARealFragment`)
-      .auth('user1@email.com', 'password1');
+      .auth(testUserEmail, testUserPasswd);
 
     expect(response.body.status).toBe('error');
     expect(response.statusCode).toBe(404);
@@ -51,7 +53,7 @@ describe('DELETE /fragments', () => {
 
     const response = await request(app)
       .delete(`/v1/fragments/${testFragment.id}`)
-      .auth('user1@email.com', 'password1');
+      .auth(testUserEmail, testUserPasswd);
 
     const result = await listFragments(testFragment.ownerId);
 

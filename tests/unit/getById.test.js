@@ -12,9 +12,11 @@ jest.mock('../../src/model/conversions', () => ({
 }));
 
 describe('GET /fragments/:id', () => {
+  const testUserEmail = 'user1@email.com';
+  const testUserPasswd = 'password1';
   const testFragmentData = Buffer.from('hello');
   const testFragment = {
-    ownerId: hash('user1@email.com'),
+    ownerId: hash(testUserEmail),
     id: 'a',
     type: 'text/plain',
     created: new Date().toISOString(),
@@ -43,7 +45,7 @@ describe('GET /fragments/:id', () => {
   test('should respond with HTTP 404 when an invalid fragment id is passed', async () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId`)
-      .auth('user1@email.com', 'password1');
+      .auth(testUserEmail, testUserPasswd);
 
     expect(res.statusCode).toBe(404);
   });
@@ -58,7 +60,7 @@ describe('GET /fragments/:id', () => {
 
     const response = await request(app)
       .get(`/v1/fragments/${testFragment.id}`)
-      .auth('user1@email.com', 'password1');
+      .auth(testUserEmail, testUserPasswd);
 
     expect(response.statusCode).toBe(200);
     expect(response.text).toEqual(testFragmentData.toString());
@@ -76,7 +78,7 @@ describe('GET /fragments/:id', () => {
 
     await request(app)
       .get(`/v1/fragments/${testFragment.id}.handlebars`)
-      .auth('user1@email.com', 'password1')
+      .auth(testUserEmail, testUserPasswd)
       .expect(415);
   });
 });

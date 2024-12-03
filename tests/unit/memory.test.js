@@ -10,9 +10,10 @@ const {
 } = require('../../src/model/data/memory/index');
 
 describe('fragment memory-db functions', () => {
+  const testUserEmail = 'user1@email.com';
   const testFragmentData = Buffer.from('hello');
   const testFragment = {
-    ownerId: hash('user1@email.com'),
+    ownerId: hash(testUserEmail),
     id: 'a',
     type: 'text/plain',
     created: new Date().toISOString(),
