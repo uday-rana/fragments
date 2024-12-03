@@ -1,5 +1,7 @@
 // https://github.com/markdown-it/markdown-it
 const md = require('markdown-it')();
+// https://csv.js.org/parse/api/sync/
+const csvParseSync = require('csv-parse/sync');
 
 /**
  * Type 	Valid Conversion Extensions
@@ -15,6 +17,7 @@ const md = require('markdown-it')();
  * image/avif 	.png, .jpg, .webp, .gif, .avif
  * image/gif 	.png, .jpg, .webp, .gif, .avif
  */
+
 const validConversionTargets = {
   'text/plain': {
     extensions: ['.txt'],
@@ -69,6 +72,17 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
     case 'text/markdown':
       if (targetExtension == '.html') {
         return md.render(sourceBuffer.toString());
+      }
+      break;
+
+    case 'text/csv':
+      if (targetExtension == '.json') {
+        return JSON.stringify(
+          csvParseSync.parse(sourceBuffer, {
+            columns: true,
+            skip_empty_lines: true,
+          })
+        );
       }
       break;
 

@@ -39,14 +39,21 @@ describe('Type Conversion', () => {
   });
 
   describe('conversions from csv', () => {
-    const input = 'hello, world';
+    const input = `
+"key_1","key_2"
+"value 1","value 2"
+`;
     const sourceBuffer = Buffer.from(input);
+    const expectedJsonOutput = JSON.stringify([{ key_1: 'value 1', key_2: 'value 2' }]);
 
     test('should convert buffer to csv for .csv target', () => {
       expect(convertBuffer(sourceBuffer, 'text/csv', '.csv')).toBe(input);
     });
     test('should convert buffer to plain text for .txt target', () => {
       expect(convertBuffer(sourceBuffer, 'text/csv', '.txt')).toBe(input);
+    });
+    test('should convert buffer to json for .json target', () => {
+      expect(convertBuffer(sourceBuffer, 'text/csv', '.json')).toBe(expectedJsonOutput);
     });
   });
 
