@@ -80,7 +80,8 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
 
     case 'application/json':
       if (!targetExtension || targetExtension == '.json') {
-        return sourceBuffer.toString();
+        // Standardize the output by converting it to an object then to JSON
+        return JSON.stringify(JSON.parse(sourceBuffer.toString()));
       }
 
       if (targetExtension == '.txt') {
