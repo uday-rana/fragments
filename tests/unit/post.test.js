@@ -8,6 +8,19 @@ const hash = require('../../src/hash');
 const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('POST /fragments', () => {
+  describe('unauthorized requests', () => {
+    // If the request is missing the Authorization header, it should be forbidden
+    test('should deny unauthenticated requests', () =>
+      request(app).post('/v1/fragments').expect(401));
+
+    // If the wrong username/password pair are used (no such user), it should be forbidden
+    test('should deny incorrect credentials', () =>
+      request(app)
+        .post('/v1/fragments')
+        .auth('invalid@email.com', 'incorrect_password')
+        .expect(401));
+  });
+
   describe('happy path', () => {
     test('authenticated users posting raw binary data of supported text/plain content-type get successful response', async () => {
       const rawData = Buffer.from('hello');
@@ -59,7 +72,7 @@ describe('POST /fragments', () => {
   });
 
   describe('erroneous data in request body', () => {
-    test('non-buffer data sent in request body returns status 415', async () => {
+    test('should respond with HTTP 415 when non-buffer data is sent in the request body', async () => {
       const rawData = 'hello';
 
       const res = await request(app)
@@ -71,7 +84,7 @@ describe('POST /fragments', () => {
       expect(res.statusCode).toBe(415);
     });
 
-    test('no data sent in request body returns status 415', async () => {
+    test('should respond with HTTP 415 when no data is sent in the request body', async () => {
       const res = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -82,7 +95,7 @@ describe('POST /fragments', () => {
   });
 
   describe('erroneous content-type header in request', () => {
-    test('unsupported content-type set in request header returns status 415', async () => {
+    test('should respond with HTTP 415 when an unsupported content-type is set in the request header', async () => {
       const rawData = Buffer.from('hello');
 
       const res = await request(app)
@@ -94,7 +107,7 @@ describe('POST /fragments', () => {
       expect(res.statusCode).toBe(415);
     });
 
-    test('content-type not set in request header returns status 415', async () => {
+    test('should respond with HTTP 415 when the content-type header is not set on the request', async () => {
       const rawData = Buffer.from('hello');
 
       const res = await request(app)
@@ -104,18 +117,5 @@ describe('POST /fragments', () => {
 
       expect(res.statusCode).toBe(415);
     });
-  });
-
-  describe('unauthorized requests', () => {
-    // If the request is missing the Authorization header, it should be forbidden
-    test('unauthenticated requests are denied', () =>
-      request(app).post('/v1/fragments').expect(401));
-
-    // If the wrong username/password pair are used (no such user), it should be forbidden
-    test('incorrect credentials are denied', () =>
-      request(app)
-        .post('/v1/fragments')
-        .auth('invalid@email.com', 'incorrect_password')
-        .expect(401));
   });
 });

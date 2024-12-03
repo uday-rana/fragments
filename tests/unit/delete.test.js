@@ -26,17 +26,17 @@ describe('DELETE /fragments', () => {
   });
 
   // If the request is missing the Authorization header, it should be forbidden
-  test('unauthenticated requests are denied', () =>
+  test('should deny unauthenticated requests', () =>
     request(app).delete('/v1/fragments').expect(401));
 
   // If the wrong username/password pair are used (no such user), it should be forbidden
-  test('incorrect credentials are denied', () =>
+  test('should deny incorrect credentials', () =>
     request(app)
       .delete('/v1/fragments')
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  test('should return 404 for invalid id', async () => {
+  test('should respond with HTTP 404 when an invalid fragment id is passed', async () => {
     const response = await request(app)
       .delete(`/v1/fragments/notARealFragment`)
       .auth('user1@email.com', 'password1');
@@ -45,7 +45,7 @@ describe('DELETE /fragments', () => {
     expect(response.statusCode).toBe(404);
   });
 
-  test('fragment is successfully deleted', async () => {
+  test("should respond with HTTP 200 and remove fragment from user's fragments list on success", async () => {
     await writeFragment(testFragment);
     await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 

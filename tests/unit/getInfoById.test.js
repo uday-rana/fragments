@@ -21,17 +21,17 @@ describe('GET /fragments/:id/info', () => {
   });
 
   // If the request is missing the Authorization header, it should be forbidden
-  test('unauthenticated requests are denied', () =>
+  test('should deny unauthenticated requests', () =>
     request(app).get('/v1/fragments/someId/info').expect(401));
 
   // If the wrong username/password pair are used (no such user), it should be forbidden
-  test('incorrect credentials are denied', () =>
+  test('should deny incorrect credentials', () =>
     request(app)
       .get('/v1/fragments/someId/info')
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  test('invalid id parameter passed', async () => {
+  test('should respond with HTTP 404 when an invalid fragment id is passed', async () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId/info`)
       .auth('user1@email.com', 'password1');
@@ -39,7 +39,7 @@ describe('GET /fragments/:id/info', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  test('data returned matches data sent to POST', async () => {
+  test('should respond with HTTP 200, return status: "ok" in response, and return data matching the data in the db on success', async () => {
     await writeFragment(testFragment);
     await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
@@ -47,6 +47,7 @@ describe('GET /fragments/:id/info', () => {
       .get(`/v1/fragments/${testFragment.id}/info`)
       .auth('user1@email.com', 'password1');
 
+    expect(response.statusCode).toBe(200);
     expect(response.body.status).toBe('ok');
     expect(response.body.fragment).toEqual(testFragment);
   });

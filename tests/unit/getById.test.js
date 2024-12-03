@@ -30,17 +30,17 @@ describe('GET /fragments/:id', () => {
   });
 
   // If the request is missing the Authorization header, it should be forbidden
-  test('unauthenticated requests are denied', () =>
+  test('should deny unauthenticated requests', () =>
     request(app).get('/v1/fragments/someId').expect(401));
 
   // If the wrong username/password pair are used (no such user), it should be forbidden
-  test('incorrect credentials are denied', () =>
+  test('should deny incorrect credentials', () =>
     request(app)
       .get('/v1/fragments/someId')
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  test('invalid id parameter passed', async () => {
+  test('should respond with HTTP 404 when an invalid fragment id is passed', async () => {
     const res = await request(app)
       .get(`/v1/fragments/notARealId`)
       .auth('user1@email.com', 'password1');
@@ -48,7 +48,7 @@ describe('GET /fragments/:id', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  test('data returned matches data sent to POST', async () => {
+  test('should respond with HTTP 200 and return data matching the data in the db on success', async () => {
     convertBuffer.mockImplementation((buf) => {
       return buf.toString();
     });
@@ -64,7 +64,7 @@ describe('GET /fragments/:id', () => {
     expect(response.text).toEqual(testFragmentData.toString());
   });
 
-  test('responds with 415 for unsupported conversions', async () => {
+  test('should respond with HTTP 415 when unsupported conversion target extension is passed', async () => {
     convertBuffer.mockImplementation(() => {
       let err = new Error(`Invalid target extension`);
       err.status = 415;

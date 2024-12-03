@@ -21,21 +21,21 @@ describe('GET /fragments', () => {
   });
 
   // If the request is missing the Authorization header, it should be forbidden
-  test('unauthenticated requests are denied', () => request(app).get('/v1/fragments').expect(401));
+  test('should deny unauthenticated requests', () => request(app).get('/v1/fragments').expect(401));
 
   // If the wrong username/password pair are used (no such user), it should be forbidden
-  test('incorrect credentials are denied', () =>
+  test('should deny incorrect credentials', () =>
     request(app).get('/v1/fragments').auth('invalid@email.com', 'incorrect_password').expect(401));
 
   // Using a valid username/password pair should give a success result with a .fragments array
-  test('authenticated users get a fragments array', async () => {
+  test('should return an array named fragments on success', async () => {
     const res = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
     expect(res.body.status).toBe('ok');
     expect(Array.isArray(res.body.fragments)).toBe(true);
   });
 
-  test("should return array of user's fragment ids from db", async () => {
+  test("should return an array of user's fragment ids from the db", async () => {
     await writeFragment(testFragment);
     await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
@@ -45,7 +45,7 @@ describe('GET /fragments', () => {
     expect(response.body.fragments).toEqual(expect.arrayContaining([testFragment.id]));
   });
 
-  test('expanded data returned matches data sent to POST', async () => {
+  test('should return expanded data matching the data in the db when the "expand" query parameter is passed', async () => {
     await writeFragment(testFragment);
     await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
@@ -57,7 +57,7 @@ describe('GET /fragments', () => {
     expect(response.body.fragments).toEqual(expect.arrayContaining([testFragment]));
   });
 
-  test('"expand" query parameter passed unsupported value returns unexpanded data', async () => {
+  test('should return unexpanded data when the "expand" query parameter is passed an unsupported value', async () => {
     await writeFragment(testFragment);
     await writeFragmentData(testFragment.ownerId, testFragment.id, testFragmentData);
 
