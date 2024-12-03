@@ -10,10 +10,11 @@ const validTypes = [
   `text/html`,
   `text/csv`,
   `application/json`,
+  `application/yaml`,
 
   /**
    *  Other types will be added later.
-   *  `application/yaml`,
+   *
    *  `image/png`,
    *  `image/jpeg`,
    *  `image/webp`,

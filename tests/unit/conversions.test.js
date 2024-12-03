@@ -60,12 +60,31 @@ describe('Type Conversion', () => {
   describe('conversions from json', () => {
     const input = '{"value":"hello"}\n';
     const sourceBuffer = Buffer.from(input);
+    const expectedYamlOutput = 'value: hello\n';
 
     test('should convert buffer to json for .json target', () => {
       expect(convertBuffer(sourceBuffer, 'application/json', '.json')).toBe(input);
     });
     test('should convert buffer to plain text for .txt target', () => {
       expect(convertBuffer(sourceBuffer, 'application/json', '.txt')).toBe(input);
+    });
+    test('should convert buffer to yaml for .yaml target', () => {
+      expect(convertBuffer(sourceBuffer, 'application/json', '.yaml')).toBe(expectedYamlOutput);
+    });
+    test('should convert buffer to yaml for .yml target', () => {
+      expect(convertBuffer(sourceBuffer, 'application/json', '.yml')).toBe(expectedYamlOutput);
+    });
+  });
+
+  describe('conversions from yaml', () => {
+    const input = 'value: hello\n';
+    const sourceBuffer = Buffer.from(input);
+
+    test('should convert buffer to yaml for .yaml target', () => {
+      expect(convertBuffer(sourceBuffer, 'application/yaml', '.yaml')).toBe(input);
+    });
+    test('should convert buffer to plain text for .txt target', () => {
+      expect(convertBuffer(sourceBuffer, 'application/yaml', '.txt')).toBe(input);
     });
   });
 

@@ -2,6 +2,8 @@
 const md = require('markdown-it')();
 // https://csv.js.org/parse/api/sync/
 const csvParseSync = require('csv-parse/sync');
+// https://github.com/nodeca/js-yaml
+const yaml = require('js-yaml');
 
 /**
  * Type 	Valid Conversion Extensions
@@ -38,6 +40,10 @@ const validConversionTargets = {
   'application/json': {
     extensions: ['.json', '.yaml', '.yml', '.txt'],
     contentTypes: ['application/json', 'application/yaml', 'text/plain'],
+  },
+  'application/yaml': {
+    extensions: ['.yaml', '.txt'],
+    contentTypes: ['application/yaml', 'text/plain'],
   },
 };
 
@@ -83,6 +89,12 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
             skip_empty_lines: true,
           })
         );
+      }
+      break;
+
+    case 'application/json':
+      if (targetExtension == '.yaml' || targetExtension == '.yml') {
+        return yaml.dump(JSON.parse(sourceBuffer.toString()));
       }
       break;
 
