@@ -29,7 +29,7 @@ module.exports = async (req, res, next) => {
     `retrieved fragment by id`
   );
   logger.debug(
-    { foundFragment, type: typeof foundFragment },
+    { foundFragment, type: typeof foundFragment, mimeType: foundFragment.mimeType },
     'retrieved fragment by id: debug info'
   );
 
