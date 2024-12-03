@@ -9,6 +9,7 @@ user1@email.com:password1
 HTTP/1.1 201
 [Captures]
 url: header "Location"
+id: jsonpath "$.fragment.id"
 
 # PUT new data in
 PUT {{url}}
@@ -20,6 +21,7 @@ user1@email.com:password1
 HTTP/1.1 200
 [Asserts]
 jsonpath "$.status" == "ok"
+jsonpath "$.fragment.id" == {{id}}
 jsonpath "$.fragment.id" matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
 jsonpath "$.fragment.created" matches /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+/
