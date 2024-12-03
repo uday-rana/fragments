@@ -11,16 +11,11 @@ const validTypes = [
   `text/csv`,
   `application/json`,
   `application/yaml`,
-
-  /**
-   *  Other types will be added later.
-   *
-   *  `image/png`,
-   *  `image/jpeg`,
-   *  `image/webp`,
-   *  `image/avif`,
-   *  `image/gif`,
-   */
+  `image/png`,
+  `image/jpeg`,
+  `image/webp`,
+  `image/avif`,
+  `image/gif`,
 ];
 
 describe('Fragment class', () => {

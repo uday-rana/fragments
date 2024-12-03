@@ -4,6 +4,8 @@ const md = require('markdown-it')();
 const csvParseSync = require('csv-parse/sync');
 // https://github.com/nodeca/js-yaml
 const yaml = require('js-yaml');
+// https://sharp.pixelplumbing.com/
+const sharp = require('sharp');
 
 /**
  * Type 	Valid Conversion Extensions
@@ -45,6 +47,14 @@ const validConversionTargets = {
     extensions: ['.yaml', '.txt'],
     contentTypes: ['application/yaml', 'text/plain'],
   },
+  // Don't need to store valid conversion targets for images
+  // since they all support conversion to each other
+  // we just check if the target extension is in extToContentType
+  'image/png': null,
+  'image/jpeg': null,
+  'image/webp': null,
+  'image/avif': null,
+  'image/gif': null,
 };
 
 const extToContentType = {
@@ -55,15 +65,58 @@ const extToContentType = {
   '.json': 'application/json',
   '.yaml': 'application/yaml',
   '.yml': 'application/yaml',
+  '.png': 'image/png',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
+  '.gif': 'image/gif',
 };
 
-function convertBuffer(sourceBuffer, sourceType, targetExtension) {
-  if (targetExtension && !validConversionTargets[sourceType].extensions.includes(targetExtension)) {
-    let err = new Error(`Invalid target extension ${targetExtension} for ${sourceType}`);
-    err.status = 415;
-    throw err;
+async function convertBuffer(sourceBuffer, sourceType, targetExtension) {
+  if (sourceType.startsWith('image/')) {
+    if (targetExtension && !(targetExtension in extToContentType)) {
+      let err = new Error(`Invalid target extension ${targetExtension} for ${sourceType}`);
+      err.status = 415;
+      throw err;
+    }
+
+    return await convertImageBuffer(sourceBuffer, sourceType, targetExtension);
   }
 
+  if (sourceType.startsWith('text/') || sourceType.startsWith('application/')) {
+    if (
+      targetExtension &&
+      !validConversionTargets[sourceType].extensions.includes(targetExtension)
+    ) {
+      let err = new Error(`Invalid target extension ${targetExtension} for ${sourceType}`);
+      err.status = 415;
+      throw err;
+    }
+
+    return convertTextBuffer(sourceBuffer, sourceType, targetExtension);
+  }
+}
+
+async function convertImageBuffer(sourceBuffer, sourceType, targetExtension) {
+  if (!targetExtension || sourceType == extToContentType[targetExtension]) {
+    return sourceBuffer;
+  }
+
+  switch (targetExtension) {
+    case '.png':
+      return await sharp(sourceBuffer).png().toBuffer();
+    case '.jpeg':
+      return await sharp(sourceBuffer).jpeg().toBuffer();
+    case '.webp':
+      return await sharp(sourceBuffer).webp().toBuffer();
+    case '.avif':
+      return await sharp(sourceBuffer).avif().toBuffer();
+    case '.gif':
+      return await sharp(sourceBuffer).gif().toBuffer();
+  }
+}
+
+function convertTextBuffer(sourceBuffer, sourceType, targetExtension) {
   // Handle cases where no conversion is required
   if (
     !targetExtension ||
@@ -76,29 +129,23 @@ function convertBuffer(sourceBuffer, sourceType, targetExtension) {
   // Handle conversions
   switch (sourceType) {
     case 'text/markdown':
-      if (targetExtension == '.html') {
+      if (targetExtension === '.html') {
         return md.render(sourceBuffer.toString());
       }
       break;
 
     case 'text/csv':
-      if (targetExtension == '.json') {
+      if (targetExtension === '.json') {
         return JSON.stringify(
-          csvParseSync.parse(sourceBuffer, {
-            columns: true,
-            skip_empty_lines: true,
-          })
+          csvParseSync.parse(sourceBuffer, { columns: true, skip_empty_lines: true })
         );
       }
       break;
 
     case 'application/json':
-      if (targetExtension == '.yaml' || targetExtension == '.yml') {
+      if (targetExtension === '.yaml' || targetExtension === '.yml') {
         return yaml.dump(JSON.parse(sourceBuffer.toString()));
       }
-      break;
-
-    default:
       break;
   }
 }

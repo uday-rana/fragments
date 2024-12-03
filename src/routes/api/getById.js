@@ -64,7 +64,7 @@ module.exports = async (req, res, next) => {
 
   let result;
   try {
-    result = convertBuffer(foundFragmentData, foundFragment.mimeType, targetExtension);
+    result = await convertBuffer(foundFragmentData, foundFragment.mimeType, targetExtension);
   } catch (error) {
     logger.warn({ error }, `error converting fragment data to requested type`);
     return next(error);

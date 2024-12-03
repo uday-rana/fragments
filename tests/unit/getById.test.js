@@ -50,7 +50,7 @@ describe('GET /fragments/:id', () => {
 
   test('should respond with HTTP 200 and return data matching the data in the db on success', async () => {
     convertBuffer.mockImplementation((buf) => {
-      return buf.toString();
+      return Promise.resolve(buf.toString());
     });
 
     await writeFragment(testFragment);
@@ -68,7 +68,7 @@ describe('GET /fragments/:id', () => {
     convertBuffer.mockImplementation(() => {
       let err = new Error(`Invalid target extension`);
       err.status = 415;
-      throw err;
+      return Promise.reject(err);
     });
 
     await writeFragment(testFragment);
