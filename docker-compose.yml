@@ -2,6 +2,9 @@ services:
   # Fragments microservice API server
   fragments:
     container_name: fragments
+    depends_on:
+      - dynamodb-local
+      - localstack
     # Use a proper init process (tini)
     init: true
     # Build the Docker Image using the Dockerfile
