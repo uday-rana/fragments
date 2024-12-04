@@ -136,9 +136,7 @@ function convertTextBuffer(sourceBuffer, sourceType, targetExtension) {
 
     case 'text/csv':
       if (targetExtension === '.json') {
-        return JSON.stringify(
-          csvParseSync.parse(sourceBuffer, { columns: true, skip_empty_lines: true })
-        );
+        return JSON.stringify(csvParseSync.parse(sourceBuffer, { skip_empty_lines: true }));
       }
       break;
 

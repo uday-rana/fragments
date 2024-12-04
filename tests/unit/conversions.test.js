@@ -49,7 +49,7 @@ describe('Type Conversion', () => {
 "value 1","value 2"
 `;
       const sourceBuffer = Buffer.from(input);
-      const expectedJsonOutput = '[{"key_1":"value 1","key_2":"value 2"}]';
+      const expectedJsonOutput = '[["key_1","key_2"],["value 1","value 2"]]';
 
       test('should convert buffer to csv for .csv target', async () => {
         expect(await convertBuffer(sourceBuffer, 'text/csv', '.csv')).toBe(input);
