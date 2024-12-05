@@ -19,9 +19,9 @@ services:
       # Use the LOG_LEVEL set in the host environment, or default to info
       - LOG_LEVEL=${LOG_LEVEL:-info}
       # AWS credentials to use
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-test}
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-test}
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_SESSION_TOKEN=test
       - AWS_REGION=us-east-1
       # Use the LocalStack endpoint vs. AWS for S3 AWS SDK clients.
       # NOTE: we use Docker's internal network to the localstack container
@@ -47,10 +47,10 @@ services:
     # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.UsageNotes.html
     command: ['-jar', 'DynamoDBLocal.jar', '-inMemory']
     environment:
-      # Set up credentials
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-test}
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-test}
+      # AWS credentials to use
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_SESSION_TOKEN=test
 
   # LocalStack for S3, see https://docs.localstack.cloud/get-started/#docker-compose
   # Interact via awscli-local, see https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal
@@ -67,7 +67,7 @@ services:
       - SERVICES=s3
       # We're always working in us-east-1
       - DEFAULT_REGION=us-east-1
-      # Set up credentials
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-test}
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-test}
+      # AWS credentials to use
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_SESSION_TOKEN=test
