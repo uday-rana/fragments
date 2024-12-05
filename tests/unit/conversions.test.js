@@ -122,10 +122,10 @@ describe('Type Conversion', () => {
       expect(await convertBuffer(sourceBuffer, 'image/avif', '.png')).toEqual(expectedPngOutput);
     });
 
-    test('should convert buffer to jpeg for .jpeg target', async () => {
+    test('should convert buffer to jpeg for .jpg target', async () => {
       const sourceBuffer = await sharp(avifTestFilePath).toBuffer();
       const expectedJpegOutput = await sharp(sourceBuffer).jpeg().toBuffer();
-      expect(await convertBuffer(sourceBuffer, 'image/avif', '.jpeg')).toEqual(expectedJpegOutput);
+      expect(await convertBuffer(sourceBuffer, 'image/avif', '.jpg')).toEqual(expectedJpegOutput);
     });
 
     test('should convert buffer to webp for .webp target', async () => {

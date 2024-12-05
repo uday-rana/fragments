@@ -66,7 +66,7 @@ const extToContentType = {
   '.yaml': 'application/yaml',
   '.yml': 'application/yaml',
   '.png': 'image/png',
-  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
   '.webp': 'image/webp',
   '.avif': 'image/avif',
   '.gif': 'image/gif',
@@ -105,7 +105,7 @@ async function convertImageBuffer(sourceBuffer, sourceType, targetExtension) {
   switch (targetExtension) {
     case '.png':
       return await sharp(sourceBuffer).png().toBuffer();
-    case '.jpeg':
+    case '.jpg':
       return await sharp(sourceBuffer).jpeg().toBuffer();
     case '.webp':
       return await sharp(sourceBuffer).webp().toBuffer();
