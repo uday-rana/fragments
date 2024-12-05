@@ -3,7 +3,7 @@ const { Fragment } = require('../../model/fragment');
 const { createSuccessResponse } = require('../../response');
 
 /**
- * Creates a new fragment for the current user (i.e., authenticated user)
+ * Update fragment for the current user by the given id
  */
 module.exports = async (req, res, next) => {
   logger.debug(
