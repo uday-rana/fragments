@@ -94,7 +94,7 @@ jobs:
         run: npm install
 
       - name: Build Containers
-        run: docker compose up --build -d
+        run: docker compose up -d
 
       - name: Setup Local AWS Resources
         # NOTE: this file needs to be made executable *before* you check into git:
@@ -105,7 +105,7 @@ jobs:
         run: npm run test:integration
         continue-on-error: true # This ensures the job doesn't fail immediately if the tests fail
 
-      - name: Capture Logs from Docker Containers if Tests Fail
+      - name: Capture Logs from AWS Services if Tests Fail
         if: failure() # Only run this if the integration tests failed
         run: |
           echo "Fetching Docker logs for LocalStack container"
