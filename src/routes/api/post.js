@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
   if (!Buffer.isBuffer(req.body)) {
     const err = new Error('Unsupported media type');
     err.status = 415;
-    logger.debug(
+    logger.warn(
       { error: err },
       'invalid/unsupported content-type headers and/or malformed request body'
     );

@@ -16,7 +16,6 @@ module.exports = async (req, res, next) => {
         contentType: req.headers['content-type'],
         host: req.headers?.host,
       },
-      body: req.body,
     },
     `incoming request: PUT /v1/fragments/:id`
   );
@@ -25,7 +24,7 @@ module.exports = async (req, res, next) => {
   if (!Buffer.isBuffer(req.body)) {
     const err = new Error('Unsupported media type');
     err.status = 415;
-    logger.debug(
+    logger.warn(
       { error: err },
       'invalid/unsupported content-type headers and/or malformed request body'
     );
