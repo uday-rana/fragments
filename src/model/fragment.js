@@ -108,8 +108,7 @@ class Fragment {
       throw new Error('in function setData, argument "data" must be of type Buffer');
     }
     this.size = Buffer.byteLength(data);
-    await this.save();
-    return writeFragmentData(this.ownerId, this.id, data);
+    await Promise.all([this.save(), writeFragmentData(this.ownerId, this.id, data)]);
   }
 
   /**
