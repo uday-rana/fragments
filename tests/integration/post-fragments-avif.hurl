@@ -16,6 +16,7 @@ jsonpath "$.fragment.type" == "image/avif"
 jsonpath "$.fragment.size" == 5855
 [Captures]
 url: header "Location"
+
 GET {{url}}
 [BasicAuth]
 user1@email.com:password1
