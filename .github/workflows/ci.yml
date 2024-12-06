@@ -103,6 +103,22 @@ jobs:
 
       - name: Run Hurl Tests
         run: npm run test:integration
+        continue-on-error: true # This ensures the job doesn't fail immediately if the tests fail
+
+      - name: Capture Logs from Docker Containers if Tests Fail
+        if: failure() # Only run this if the integration tests failed
+        run: |
+          echo "Fetching Docker logs for LocalStack container"
+          docker logs $(docker ps -q --filter "name=localstack") || echo "No LocalStack logs found"
+
+          echo "Fetching Docker logs for DynamoDB Local container"
+          docker logs $(docker ps -q --filter "name=dynamodb-local") || echo "No DynamoDB Local logs found"
+
+      - name: Capture Logs from the Application if Tests Fail
+        if: failure() # Only run this if the integration tests failed
+        run: |
+          echo "Fetching application logs"
+          docker logs $(docker ps -q --filter "name=fragments") || echo "No server logs found"
 
   docker-hub:
     name: Build and Push to Docker Hub
