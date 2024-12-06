@@ -54,6 +54,10 @@ You can run these scripts with `npm run [script]`:
 
 - `lint`: Runs [ESLint](https://eslint.org/) on `.js` files in `src/` and `tests/`.
 
+### Formatting
+
+- `prettier`: Runs [Prettier](https://prettier.io/) on all files in the project directory.
+
 ## Environment Variables
 
 Environment variables can be set to define the server's behavior.
