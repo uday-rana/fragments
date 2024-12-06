@@ -120,6 +120,9 @@ They are set to `test` in `docker-compose.yml`.
 - **Testing:**
   - **Unit Testing:** [Jest](https://jestjs.io/)
     - **HTTP Testing Library:** [Supertest](https://github.com/ladjs/supertest#readme)
-  - **Integration Testing:** [Hurl](https://hurl.dev/)
+  - **Integration Testing:**
+    - [Hurl](https://hurl.dev/)
+    - [DynamoDB local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
+    - [LocalStack](https://www.localstack.cloud/)
 - **Linting:** [ESLint](https://eslint.org/docs/v9.x/)
 - **Formatting:** [Prettier](https://prettier.io/docs/en/)
