@@ -13,13 +13,16 @@ Fragments back-end API
 
 ### Docker Compose
 
-This will run the server as a Docker container, along with services for in-memory storage.
+This will run the server as a Docker container using HTTP Basic Auth, along with services for in-memory storage.
 
 1. `docker compose up --build -d`
 
 2. `./scripts/local-aws-setup.sh`
 
 The server will run on port `8080`.
+
+> [!TIP]
+> To run the server with Docker Compose using AWS Cognito, replace the `HTPASSWD_FILE` environment variable in `docker-compose.yml` with the AWS Cognito environment variables. See the Environment Variables section below for more information.
 
 ### Standalone Container
 
