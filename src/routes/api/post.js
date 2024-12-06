@@ -13,7 +13,6 @@ module.exports = async (req, res, next) => {
         contentType: req.headers['content-type'],
         host: req.headers?.host,
       },
-      body: req.body,
     },
     `incoming request: POST /v1/fragments`
   );

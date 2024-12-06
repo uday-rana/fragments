@@ -53,10 +53,7 @@ module.exports = async (req, res, next) => {
     { userId: foundFragment.ownerId, fragmentId: foundFragment.id },
     `retrieved fragment data by id`
   );
-  logger.debug(
-    { foundFragmentData, type: typeof foundFragmentData },
-    'retrieved fragment data by id: debug info'
-  );
+  logger.debug({ type: typeof foundFragmentData }, 'retrieved fragment data by id: debug info');
 
   if (targetExtension) {
     logger.info({ targetExtension }, 'fragment type conversion requested');
