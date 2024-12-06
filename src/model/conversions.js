@@ -108,11 +108,11 @@ async function convertImageBuffer(sourceBuffer, sourceType, targetExtension) {
     case '.jpg':
       return await sharp(sourceBuffer).jpeg().toBuffer();
     case '.webp':
-      return await sharp(sourceBuffer).webp().toBuffer();
+      return await sharp(sourceBuffer, { animated: true }).webp().toBuffer();
     case '.avif':
       return await sharp(sourceBuffer).avif().toBuffer();
     case '.gif':
-      return await sharp(sourceBuffer).gif().toBuffer();
+      return await sharp(sourceBuffer, { animated: true }).gif().toBuffer();
   }
 }
 
