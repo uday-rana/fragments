@@ -98,7 +98,7 @@ async function convertBuffer(sourceBuffer, sourceType, targetExtension) {
 }
 
 async function convertImageBuffer(sourceBuffer, sourceType, targetExtension) {
-  if (!targetExtension || sourceType == extToContentType[targetExtension]) {
+  if (!targetExtension || sourceType == extToContentType?.targetExtension) {
     return sourceBuffer;
   }
 
