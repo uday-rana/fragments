@@ -120,7 +120,7 @@ They are set to `test` in `docker-compose.yml`.
   - **Development/Testing:**
     - [http-auth](https://www.npmjs.com/package/http-auth)
     - [http-auth-passport](https://www.npmjs.com/package/http-auth-passport)
-- **Key-Value Storage:**
+- **Key-Value Database:**
   - **Production:** [AWS DynamoDB](https://aws.amazon.com/dynamodb/)
   - **Development/Testing:** [AWS DynamoDB local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
 - **Object Storage:**
