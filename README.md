@@ -107,6 +107,9 @@ They are set to `test` in `docker-compose.yml`.
 - **Containerization:** [Docker](https://docs.docker.com/reference/)
 - **AWS**:
   - **SDK:** [AWS SDK for JavaScript, Version 3](https://docs.aws.amazon.com/sdk-for-javascript/)
+    - [@aws-sdk/client-s3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-s3/)
+    - [@aws-sdk/lib-dynamodb](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-lib-dynamodb/)
+    - [@aws-sdk/client-dynamodb](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-dynamodb/)
   - **CLI:** [AWS CLI](https://aws.amazon.com/cli/)
 - **Authorization:**
   - [Passport.js](https://www.passportjs.org/)
@@ -127,11 +130,6 @@ They are set to `test` in `docker-compose.yml`.
   - **Logging:** [Pino](https://getpino.io/#/docs/api), [pino-pretty](https://github.com/pinojs/pino-pretty)
   - **Security:** [Helmet](https://helmetjs.github.io/), [Express/CORS](https://github.com/expressjs/cors#readme)
   - **Graceful Shutdown:** [Stoppable](https://github.com/hunterloftis/stoppable#readme)
-- **Runtime:** [Node.js](https://nodejs.org/docs/latest-v20.x/api/)
-- **Runners:** [nodemon](https://github.com/remy/nodemon#readme)
-- **Package Manager:** [npm](https://docs.npmjs.com/)
-- **Version Control System:** [Git](https://git-scm.com/doc), [GitHub](https://docs.github.com/)
-- **CI/CD:** [GitHub Actions](https://docs.github.com/en/actions)
 - **Testing:**
   - **Unit Testing:**
     - [Jest](https://jestjs.io/)
@@ -139,5 +137,10 @@ They are set to `test` in `docker-compose.yml`.
   - **Integration Testing:**
     - [Hurl](https://hurl.dev/)
     - [Docker Compose](https://docs.docker.com/compose/)
+- **Version Control System:** [Git](https://git-scm.com/doc), [GitHub](https://docs.github.com/)
+- **CI/CD:** [GitHub Actions](https://docs.github.com/en/actions)
+- **Runtime:** [Node.js](https://nodejs.org/docs/latest-v20.x/api/)
+- **Runners:** [nodemon](https://github.com/remy/nodemon#readme)
+- **Package Manager:** [npm](https://docs.npmjs.com/)
 - **Linting:** [ESLint](https://eslint.org/docs/v9.x/)
 - **Formatting:** [Prettier](https://prettier.io/docs/en/)
