@@ -108,6 +108,21 @@ They are set to `test` in `docker-compose.yml`.
 - **AWS**:
   - **SDK:** [AWS SDK for JavaScript, Version 3](https://docs.aws.amazon.com/sdk-for-javascript/)
   - **CLI:** [AWS CLI](https://aws.amazon.com/cli/)
+- **Authorization:**
+  - [Passport.js](https://www.passportjs.org/)
+  - **Production:**
+    - [AWS Cognito](https://aws.amazon.com/cognito/)
+    - [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify)
+    - [passport-http-bearer](https://www.passportjs.org/packages/passport-http-bearer/)
+  - **Development/Testing:**
+    - [http-auth](https://www.npmjs.com/package/http-auth)
+    - [http-auth-passport](https://www.npmjs.com/package/http-auth-passport)
+- **Key-Value Storage:**
+  - **Production:** [AWS DynamoDB](https://aws.amazon.com/dynamodb/)
+  - **Development/Testing:** [AWS DynamoDB local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
+- **Object Storage:**
+  - **Production:** [AWS S3](https://aws.amazon.com/s3/)
+  - **Development/Testing:** [LocalStack S3](https://docs.localstack.cloud/user-guide/aws/s3/)
 - **Server:** [Express](https://expressjs.com/en/4x/api.html)
   - **Logging:** [Pino](https://getpino.io/#/docs/api), [pino-pretty](https://github.com/pinojs/pino-pretty)
   - **Security:** [Helmet](https://helmetjs.github.io/), [Express/CORS](https://github.com/expressjs/cors#readme)
@@ -118,11 +133,11 @@ They are set to `test` in `docker-compose.yml`.
 - **Version Control System:** [Git](https://git-scm.com/doc), [GitHub](https://docs.github.com/)
 - **CI/CD:** [GitHub Actions](https://docs.github.com/en/actions)
 - **Testing:**
-  - **Unit Testing:** [Jest](https://jestjs.io/)
-    - **HTTP Testing Library:** [Supertest](https://github.com/ladjs/supertest#readme)
+  - **Unit Testing:**
+    - [Jest](https://jestjs.io/)
+    - [Supertest](https://github.com/ladjs/supertest#readme)
   - **Integration Testing:**
     - [Hurl](https://hurl.dev/)
-    - [DynamoDB local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
-    - [LocalStack](https://www.localstack.cloud/)
+    - [Docker Compose](https://docs.docker.com/compose/)
 - **Linting:** [ESLint](https://eslint.org/docs/v9.x/)
 - **Formatting:** [Prettier](https://prettier.io/docs/en/)
