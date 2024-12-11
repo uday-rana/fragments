@@ -28,7 +28,7 @@ The server will run on port `8080`.
 
 This will run the server as a Docker container and store data in the **server's** memory.
 
-`docker build -t fragments-ui .`
+`docker build -t fragments .`
 
 `docker container run [--rm] [--init] [-it] [-d] -p [8080]:8080 --env-file [.env] fragments`
 
