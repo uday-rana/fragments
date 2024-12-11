@@ -49,9 +49,9 @@ You can run these scripts with `npm run [script]`:
 ### Testing
 
 - `test`: Runs all unit tests. Pass globs for test files you want to run as arguments.
-- `test:watch` Run unit tests and watch for changes to related files.
-- `test:coverage` - Runs all unit tests and generates code coverage report, found in `coverage/lcov-report/index.html`.
-- `test:integration` - Runs all integration tests. The server must be running on `http://localhost:8080` with HTTP Basic Auth.
+- `test:watch`: Run unit tests and watch for changes to related files.
+- `test:coverage`: Runs all unit tests and generates code coverage report, found in `coverage/lcov-report/index.html`.
+- `test:integration`: Runs all integration tests. The server must be running on `http://localhost:8080` with HTTP Basic Auth.
 
 ### Linting
 
