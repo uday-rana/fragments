@@ -2,6 +2,8 @@
 
 Fragments back-end API
 
+![Architecture diagram](/fragments-architecture-diagram.avif)
+
 ## Requirements
 
 - Linux
